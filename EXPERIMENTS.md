@@ -1,0 +1,10 @@
+# EXPERIMENTS — append-only run log
+
+Format: `date | run name | config | key metrics | what changed | decision/next step`.
+Failed runs and dead ends are logged with the same care as successes (§9.3).
+
+---
+
+2026-07-11 | env-probe | n/a | n/a | Verified execution environment before Phase 0: CPU-only (4 cores, 15 GB RAM, no CUDA). Egress policy allows PyPI/GitHub only; cricsheet.org, kaggle.com, huggingface.co, download.pytorch.org all return 403 policy denials (recorded by the proxy). Default PyPI `torch` resolves the full CUDA-13 wheel stack (cudnn/cublas/nccl/triton — multi-GB), exceeding the §9 ask-before->2GB rule with no human available. | First facts of the project. | Decision: do NOT install torch in-session; split requirements into core/ml/cuda; every torch-dependent module gets guarded imports + `needs_torch`-marked tests; fixture data must be generated in-repo (synthetic, Cricsheet-schema) rather than downloaded. Human decisions D1–D3 recorded in PLAN.md.
+
+2026-07-11 | seeding-bugfix | n/a | n/a | First implementation of `rng_for` used Python's builtin `hash()` for per-ball RNG keys; str hashing is salted per process, so "deterministic" template picks would have differed between runs. Caught before any experiment depended on it; replaced with sha256. Regression test added (tests/test_seeding.py). | Iteration evidence: a reproducibility bug in the reproducibility utility. | Keep sha256 keying; never use builtin hash() for anything persisted.

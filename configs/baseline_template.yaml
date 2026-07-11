@@ -1,0 +1,17 @@
+# B1 — deterministic rule-based template generator (§6). Faithfulness ceiling,
+# diversity floor.
+seed: 13
+name: b1_template
+system: template
+
+data:
+  dataset: data/processed/dataset.jsonl
+  split: test
+
+generator:
+  # variant picked by a per-ball seeded RNG (match_id, over, ball) so output
+  # is deterministic regardless of iteration order
+  use_game_state: true       # excited variants when tension*salience is high
+  excitement_gate: 0.45      # tension*salience above this selects excited surface forms
+
+eval_config: configs/eval.yaml

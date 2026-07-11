@@ -1,0 +1,14 @@
+# Core stack: data pipeline + evaluation harness + baselines + reporting.
+# Installable on CPU-only machines with access to PyPI alone.
+# Neural components (fine-tuning, BERTScore, few-shot LLM) need
+# requirements-ml.txt on top of this (`make setup-full`).
+pyyaml>=6.0
+numpy>=1.26
+pandas>=2.1
+matplotlib>=3.8
+pytest>=8.0
+sacrebleu>=2.4
+rouge-score>=0.1.2
+spacy>=3.7
+tqdm>=4.66
+requests>=2.31

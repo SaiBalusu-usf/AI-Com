@@ -1,0 +1,39 @@
+# Shared evaluation harness config. Every system is scored by the identical
+# pipeline (§5). Metric availability policy: "auto" means use the component if
+# its dependencies/models are present, otherwise record
+# {status: unavailable, reason: ...} in metrics.json and warn loudly — never
+# a silent skip and never a fabricated number (§2 rule 7). Forcing a mode
+# ("model") on a machine without the dependency is a hard error.
+seed: 13
+
+factcheck:
+  enabled: true
+  spacy_ner: auto          # auto | off | require
+  spacy_model: en_core_web_sm
+
+excitement:
+  mode: auto               # auto -> model+heuristic if model available, else heuristic
+  model_name: j-hartmann/emotion-english-distilroberta-base
+  model_weight: 0.5
+  heuristic_weight: 0.5
+  high_arousal_labels: [anger, fear, joy, surprise]
+
+surface:
+  bleu: true
+  rouge_l: true
+  bert_score:
+    mode: auto             # auto | off | require
+    model_type: roberta-large
+    rescale_with_baseline: true
+
+diversity:
+  distinct_n: [1, 2]
+  self_bleu_sample_pairs: 200
+  repetition_ngram: 4
+
+latency:
+  warmup_calls: 5
+  batch_size: 1
+
+report:
+  write_markdown: true

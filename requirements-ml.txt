@@ -1,0 +1,16 @@
+# Neural stack for fine-tuning (M1/M2), few-shot local LLM (B2),
+# BERTScore, and the excitement scorer's model-arousal component.
+#
+# NOTE for CPU-only machines: install torch from the CPU wheel index first to
+# avoid pulling the multi-GB CUDA stack from PyPI:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+# then: pip install -r requirements-ml.txt
+torch>=2.4
+transformers>=4.46,<5
+datasets>=3.0
+peft>=0.13
+trl>=0.12
+accelerate>=1.0
+sentencepiece>=0.2
+protobuf>=4.25
+bert-score>=0.3.13

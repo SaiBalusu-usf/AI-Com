@@ -1,0 +1,23 @@
+# environments
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# data (fixtures are committed; raw/processed are rebuilt by `make data`)
+data/raw/
+data/processed/
+
+# heavy run artifacts (metrics.json, report.md, generations.jsonl ARE committed
+# as graded evidence; model weights and checkpoints are not)
+results/runs/**/checkpoints/
+results/runs/**/adapter/
+*.safetensors
+*.bin
+*.pt
+
+# misc
+.DS_Store
+scratch/

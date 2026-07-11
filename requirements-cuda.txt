@@ -1,0 +1,3 @@
+# CUDA-only extras (4-bit QLoRA for M2). Never install on CPU/MPS machines —
+# the code detects absence and falls back per configs/finetune_qwen.yaml.
+bitsandbytes>=0.44

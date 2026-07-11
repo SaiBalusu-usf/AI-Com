@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cricket-commentary"
+version = "0.1.0"
+description = "Faithful, game-state-aware cricket commentary generation: a data-to-text study (CAP 6640)"
+requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "needs_torch: requires the torch/transformers stack (make setup-full)",
+    "needs_network: requires network access to blocked-in-CI hosts",
+    "slow: takes more than ~30s",
+]

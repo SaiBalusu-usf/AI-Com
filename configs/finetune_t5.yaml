@@ -1,0 +1,37 @@
+# M1 — flan-t5-base (~250M) + LoRA (§6). Runs on CPU/MPS (slow) or CUDA.
+# Requires `make setup-full` + huggingface access.
+seed: 13
+name: m1_flan_t5_base
+system: finetune_seq2seq
+
+data:
+  dataset: data/processed/dataset.jsonl
+  train_split: train
+  val_split: val
+  eval_split: test
+
+model:
+  base: google/flan-t5-base
+  max_src_tokens: 512
+  max_tgt_tokens: 96
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules: [q, v]
+
+train:
+  learning_rate: 2.0e-4
+  epochs: 3
+  batch_size: 8
+  gradient_accumulation: 2
+  early_stopping_patience: 2   # on val loss
+  eval_every_steps: 200
+  max_steps: -1                # -1 = epoch-bound; smoke configs override
+
+decoding:
+  strategy: greedy
+  max_new_tokens: 96
+
+eval_config: configs/eval.yaml

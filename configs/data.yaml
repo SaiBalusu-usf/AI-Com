@@ -1,0 +1,71 @@
+# Dataset construction. `make download` fetches raw data (network needed),
+# `make data` builds data/processed/dataset.jsonl, `make fixture` regenerates
+# the committed 200-row golden-path fixture deterministically.
+seed: 13
+
+paths:
+  raw_dir: data/raw
+  processed: data/processed/dataset.jsonl
+  fixture: data/fixtures/mini.jsonl
+
+source:
+  # cricsheet = real ball-by-ball JSON (needs network; see DATASET_CARD.md).
+  # synthetic = seeded T20 match simulator emitting exact Cricsheet-format
+  # JSON, used for the committed fixture and for environments where
+  # cricsheet.org is unreachable (recorded per-row as data_source).
+  kind: synthetic
+  cricsheet:
+    download_url: https://cricsheet.org/downloads/ipl_json.zip
+    license: ODC-BY 2.0 (verify on download page; record in DATASET_CARD.md)
+    max_matches: 300
+  synthetic:
+    n_matches: 48
+    overs_per_innings: 20
+
+commentary:
+  # D1 (PENDING HUMAN DECISION): parallel human commentary source. Until one
+  # is chosen (see DATASET_CARD.md "Pending decisions"), targets come from the
+  # synthetic reference writer and every row is tagged
+  # reference_source=synthetic_v1. Fine-tuning results on synthetic targets
+  # are pipeline validation only, never paper numbers.
+  source: synthetic_v1
+  min_tokens: 4
+  max_tokens: 80
+
+splits:
+  # by MATCH, never by ball (§2 rule 5); enforced by tests/test_splits.py
+  train: 0.8
+  val: 0.1
+  test: 0.1
+
+features:
+  momentum_window_balls: 12
+  # over ranges are 1-based inclusive (T20)
+  phases:
+    powerplay: [1, 6]
+    middle: [7, 15]
+    death: [16, 20]
+  salience:
+    wicket: 1.0
+    six: 0.8
+    four: 0.6
+    dot_in_death: 0.4
+  tension:
+    chase:
+      rrr_weight: 0.4
+      wickets_weight: 0.3
+      progress_weight: 0.3
+      rrr_scale: 2.0
+    first_innings:
+      phase_weight: 0.5
+      salience_weight: 0.5
+      phase_weights: {powerplay: 0.5, middle: 0.35, death: 0.9}
+
+linearization:
+  format: flat        # flat | context
+  context_balls: 2
+  include_game_state: true   # the RQ2 toggle
+
+fixture:
+  n_rows: 200
+  seed: 20260711
