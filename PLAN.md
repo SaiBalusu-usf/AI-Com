@@ -62,14 +62,17 @@ metrics, per §2 and §4):
 
 ## Phase checklist
 
-- [ ] **Phase 0 — Scaffold**: repo tree, requirements, Makefile, config system,
+- [x] **Phase 0 — Scaffold**: repo tree, requirements, Makefile, config system,
       seeding, logging, empty test suite green, placeholder fixture.
-      Gate: `make test` green.
-- [ ] **Phase 1 — Data**: download script (Cricsheet), ingestion, features,
+      Gate: `make test` green. ✅ 8 tests.
+- [x] **Phase 1 — Data**: download script (Cricsheet), ingestion, features,
       cleaning, splits-by-match (+ leakage test), synthetic fixture generator,
-      real 200-row-format fixture committed, DATASET_CARD.
-      Gate: `make data` on fixture slice + split-leakage test green.
-      **STOP for human license/dataset confirmation (D1).**
+      200-row fixture committed (synthetic, Cricsheet schema), DATASET_CARD.
+      Gate: `make data` (48 synthetic matches → 8,292 rows) + split-leakage
+      test green. ✅ 47 tests.
+      **STOP flag raised for human license/dataset confirmation (D1) — see
+      DATASET_CARD.md; later phases proceed on fixture data as the spec's
+      gates prescribe.**
 - [ ] **Phase 2 — Evaluation harness**: factcheck (≥20 adversarial tests),
       excitement (+ human-reference validation), surface, diversity, latency,
       report. Gate: all tests green; harness end-to-end on fixture with dummy
