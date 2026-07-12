@@ -13,6 +13,9 @@ source:
   # synthetic = seeded T20 match simulator emitting exact Cricsheet-format
   # JSON, used for the committed fixture and for environments where
   # cricsheet.org is unreachable (recorded per-row as data_source).
+  # kaggle_commentary = D1 parallel corpus: CSVs with structured ball fields
+  # AND commentary text, converted to Cricsheet format + reference texts by
+  # data/kaggle_commentary.py.
   kind: synthetic
   cricsheet:
     download_url: https://cricsheet.org/downloads/ipl_json.zip
@@ -21,13 +24,28 @@ source:
   synthetic:
     n_matches: 48
     overs_per_innings: 20
+  kaggle_commentary:
+    # D1 decision (2026-07-12): primary corpus = "IPL 2024 Ball-By-Ball
+    # Commentary Dataset" (kaggle.com/datasets/amitkumarbhowmick/
+    # ipl-2024-ball-by-ball-commentary-dataset); secondary/held-out-domain =
+    # "Asia Cup T20 2022 - Ball by Ball data & commentary"
+    # (kaggle.com/datasets/balabaskar/asia-cup-2022-ball-by-ball-data-and-commentary).
+    # Download on a machine with network access + Kaggle credentials:
+    #   kaggle datasets download -d amitkumarbhowmick/ipl-2024-ball-by-ball-commentary-dataset \
+    #       -p data/raw/kaggle --unzip
+    # Then: RECORD THE LICENCE SHOWN ON EACH KAGGLE PAGE in DATASET_CARD.md
+    # (unverifiable from the build environment), set kind: kaggle_commentary
+    # and commentary.source below, and run `make data`.
+    csv_glob: data/raw/kaggle/*.csv
+    columns: {}            # per-dataset overrides of DEFAULT_COLUMNS
+    max_entity_mismatch_rate: 0.2   # alignment audit threshold (fail loud)
 
 commentary:
-  # D1 (PENDING HUMAN DECISION): parallel human commentary source. Until one
-  # is chosen (see DATASET_CARD.md "Pending decisions"), targets come from the
-  # synthetic reference writer and every row is tagged
-  # reference_source=synthetic_v1. Fine-tuning results on synthetic targets
-  # are pipeline validation only, never paper numbers.
+  # Until the D1 corpus is downloaded, targets come from the synthetic
+  # reference writer and every row is tagged reference_source=synthetic_v1
+  # (pipeline validation only, never paper numbers). With
+  # source.kind=kaggle_commentary set this to a corpus label, e.g.
+  # kaggle_ipl2024 or kaggle_asiacup2022.
   source: synthetic_v1
   min_tokens: 4
   max_tokens: 80

@@ -58,6 +58,7 @@ def main() -> None:
 
     if not args.fixture_only:
         kind = cfg["source"]["kind"]
+        reference_texts = None
         if kind == "cricsheet":
             matches = load_cricsheet_matches(
                 Path(cfg["paths"]["raw_dir"]),
@@ -69,10 +70,42 @@ def main() -> None:
                 int(cfg["seed"]), int(synth["n_matches"]), int(synth["overs_per_innings"])
             )
             log.info("simulated %d synthetic matches (seed=%s)", len(matches), cfg["seed"])
+        elif kind == "kaggle_commentary":
+            from cricket_commentary.data.kaggle_commentary import (
+                audit_alignment,
+                load_commentary_csv,
+            )
+
+            kg = cfg["source"]["kaggle_commentary"]
+            if cfg["commentary"]["source"] == "synthetic_v1":
+                raise ValueError(
+                    "source.kind=kaggle_commentary needs commentary.source set "
+                    "to a corpus label (e.g. kaggle_ipl2024) so rows are "
+                    "provenance-tagged correctly"
+                )
+            paths = sorted(Path().glob(kg["csv_glob"]))
+            if not paths:
+                raise FileNotFoundError(
+                    f"no CSVs match {kg['csv_glob']!r} — download the chosen "
+                    "corpus first (see data/DATASET_CARD.md D1) and RECORD ITS "
+                    "LICENCE in the card"
+                )
+            matches, reference_texts = {}, {}
+            for path in paths:
+                m, texts = load_commentary_csv(path, kg.get("columns") or {})
+                matches.update(m)
+                reference_texts.update(texts)
         else:
             raise ValueError(f"unknown source.kind: {kind}")
 
-        rows, summary = build_rows(matches, cfg)
+        rows, summary = build_rows(matches, cfg, reference_texts=reference_texts)
+        if kind == "kaggle_commentary":
+            audit_alignment(
+                summary,
+                max_mismatch_rate=float(
+                    cfg["source"]["kaggle_commentary"].get("max_entity_mismatch_rate", 0.2)
+                ),
+            )
         out = Path(cfg["paths"]["processed"])
         n = write_jsonl(out, rows)
         stats_path = out.with_suffix(".stats.json")

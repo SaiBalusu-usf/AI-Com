@@ -21,17 +21,31 @@ validate the pipeline; they are never reportable research results.**
    licence. `scripts/download_data.py` fetches + records provenance; switch
    `configs/data.yaml: source.kind` to `cricsheet` after running it.
    Human action: confirm licence text on download and initial `--check` run.
-2. **Parallel commentary corpus — DECISION D1 REQUIRED.** Options, in
-   preference order:
-   - a) Kaggle "IPL ball-by-ball with commentary"-style dataset (check the
-     specific dataset's licence; needs Kaggle credentials + network).
-   - b) Kaggle "Asia Cup 2022 ball by ball data and commentary" (smaller;
-     same caveats).
-   - c) Any other parallel corpus the instructor/licensing allows.
-   Wiring point: `build_rows(matches, cfg, reference_texts=...)` in
-   `src/cricket_commentary/data/dataset.py` accepts a
-   `(match_id, innings, over, ball) -> text` mapping; a loader for the chosen
-   corpus plus an alignment audit is the first task after D1 is decided.
+2. **Parallel commentary corpus — D1 DECIDED (2026-07-12), download pending.**
+   Chosen (researched via web search; kaggle.com pages are not fetchable from
+   the build environment, so exact declared licences could not be read here):
+   - **Primary:** [IPL 2024 Ball-By-Ball Commentary Dataset](https://www.kaggle.com/datasets/amitkumarbhowmick/ipl-2024-ball-by-ball-commentary-dataset)
+     (larger; ~a full IPL season of deliveries with text commentary — the
+     training corpus).
+   - **Secondary / held-out domain:** [Asia Cup T20 2022 — Ball by Ball data & commentary](https://www.kaggle.com/datasets/balabaskar/asia-cup-2022-ball-by-ball-data-and-commentary)
+     (the dataset named in the project brief; publicly used for commentary
+     analysis, provenance reportedly Cricbuzz).
+   Loader + alignment audit are implemented in
+   `src/cricket_commentary/data/kaggle_commentary.py` (schema-agnostic column
+   map, both over-numbering conventions, delivery_seq-keyed text join, loud
+   audit failure on suspected misalignment). Download command and config
+   switches are in `configs/data.yaml` → `source.kaggle_commentary`.
+
+   **At download time (human, one glance each):** record the licence shown on
+   each Kaggle page in the table below. Regardless of the uploader's licence
+   choice, both corpora are presumed scraped from a commentary site — cite the
+   original provider in the paper and treat redistribution cautiously.
+
+   | Corpus | Declared Kaggle licence | Checked on |
+   |---|---|---|
+   | IPL 2024 commentary (amitkumarbhowmick) | _fill at download_ | _date_ |
+   | Asia Cup 2022 (balabaskar) | _fill at download_ | _date_ |
+
    Per §4, espncricinfo/cricbuzz are NOT scraped as a fallback.
 
 ## Schema (JSONL, one ball per line)

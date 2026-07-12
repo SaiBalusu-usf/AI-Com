@@ -23,9 +23,11 @@ def build_rows(
     data_cfg: dict,
     reference_texts: dict | None = None,
 ) -> tuple[list[dict], dict]:
-    """matches: {match_id: cricsheet_match_dict}. ``reference_texts`` maps a
-    ball key (match_id, innings, over, ball, seq) -> human commentary once a
-    real parallel corpus is wired in (D1); None means synthetic_v1 references.
+    """matches: {match_id: cricsheet_match_dict}. ``reference_texts`` maps
+    ``(match_id, innings, over_1based, delivery_seq)`` -> human commentary for
+    a real parallel corpus (D1, see data/kaggle_commentary.py); None means
+    synthetic_v1 references. delivery_seq — not the legal-ball number — keys
+    the join, so a wide and the following legal ball never share a text.
     """
     commentary_cfg = data_cfg["commentary"]
     lin_cfg = data_cfg["linearization"]
@@ -59,7 +61,7 @@ def build_rows(
             write_reference(record, feats, seed)
             if reference_texts is None
             else reference_texts.get(
-                (record.match_id, record.innings, record.over, record.ball)
+                (record.match_id, record.innings, record.over, record.delivery_seq)
             )
         )
         if text is None:

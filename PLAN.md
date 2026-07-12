@@ -51,10 +51,14 @@ metrics, per §2 and §4):
 
 ## Human decisions required (see also the STOP note at end of Phase 1)
 
-- **D1 — Parallel commentary dataset:** kaggle.com is blocked and no
-  license-clean parallel corpus is reachable from this session. Options are
-  presented in `data/DATASET_CARD.md` §"Pending decisions". Fine-tuning on
-  real commentary cannot start until one is chosen and downloaded.
+- **D1 — Parallel commentary dataset: DECIDED 2026-07-12 (human approved
+  proceeding; corpora picked and wired).** Primary = Kaggle IPL 2024
+  Ball-By-Ball Commentary (amitkumarbhowmick), secondary = Asia Cup 2022
+  (balabaskar). Loader + alignment audit in
+  `data/kaggle_commentary.py`; config + download command in
+  `configs/data.yaml`. Remaining human step: download with Kaggle
+  credentials and record the licence shown on each dataset page in
+  DATASET_CARD.md (pages unfetchable from this environment).
 - **D2 — Torch install (>2 GB):** approve `make setup-full` on the target
   machine (or run this repo on a machine with normal network access).
 - **D3 — Full training runs** (>30 min on CPU): commands are printed by
