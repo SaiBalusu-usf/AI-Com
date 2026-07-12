@@ -76,6 +76,47 @@ def test_squads_are_distinct_and_full():
     assert len({name.split()[-1] for name in all_names}) == 22  # unique surnames
 
 
+def test_strike_rotation_follows_the_laws():
+    """Within an over: wides rotate on runs-run (extras minus the 1-run
+    penalty), no-balls on batter runs, byes/legbyes on runs taken, plain
+    deliveries on batter runs. Caught in the phase-7 review: v1 rotated on
+    total runs for wides/no-balls (inverted vs the laws of cricket)."""
+    for match_no in range(6):
+        match_id, match = simulate_match(31, match_no)
+        for innings in match["innings"]:
+            for over_block in innings["overs"]:
+                expected = None  # unknown at over start and after a wicket
+                for d in over_block["deliveries"]:
+                    if expected is not None:
+                        assert d["batter"] == expected, (
+                            f"{match_id} over {over_block['over']}: expected "
+                            f"{expected} on strike, got {d['batter']}"
+                        )
+                    if d.get("wickets"):
+                        expected = None
+                        continue
+                    extras = d.get("extras") or {}
+                    if "wides" in extras:
+                        ran = d["runs"]["extras"] - 1
+                    elif "noballs" in extras:
+                        ran = d["runs"]["batter"]
+                    elif extras:
+                        ran = d["runs"]["extras"]
+                    else:
+                        ran = d["runs"]["batter"]
+                    expected = d["non_striker"] if ran % 2 == 1 else d["batter"]
+
+
+def test_delivery_seq_is_unique_per_over():
+    match_id, match = simulate_match(13, 0)
+    records = parse_match(match, match_id)
+    keys = [(r.match_id, r.innings, r.over, r.delivery_seq) for r in records]
+    assert len(keys) == len(set(keys)), "delivery_seq must uniquely key deliveries"
+    # and the old (over, ball) key genuinely collides for wides, proving the need
+    ball_keys = [(r.match_id, r.innings, r.over, r.ball) for r in records]
+    assert len(ball_keys) > len(set(ball_keys))
+
+
 def test_references_are_deterministic_and_entity_faithful():
     match_id, match = simulate_match(13, 0)
     records = parse_match(match, match_id)

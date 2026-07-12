@@ -139,9 +139,11 @@ class TemplateGenerator:
     def generate(self, row: dict) -> str:
         record = row["record"]
         features = row["features"]
+        # delivery_seq (not ball) keys the stream — wides share the upcoming
+        # legal ball's number and would otherwise repeat variants verbatim
         rng = rng_for(
             self.seed, record["match_id"], record["innings"],
-            record["over"], record["ball"], "template",
+            record["over"], record.get("delivery_seq", record["ball"]), "template",
         )
         excited = (
             self.use_game_state

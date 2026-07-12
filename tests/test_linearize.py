@@ -42,10 +42,12 @@ def test_game_state_toggle_is_clean():
 
 
 def test_context_format_prefixes_previous_outcomes():
-    prev = [_record(runs_batter=4, runs_total=4), _record(runs_batter=0, runs_total=0)]
-    line = linearize(_record(), FEATS, fmt="context", prev_records=prev, context_balls=2)
-    assert line.startswith("prev=FOUR,DOT | over=17.3")
-    first = linearize(_record(), FEATS, fmt="context", prev_records=[])
+    line = linearize(
+        _record(), FEATS, fmt="context", prev_outcomes=["SIX", "FOUR", "DOT"],
+        context_balls=2,
+    )
+    assert line.startswith("prev=FOUR,DOT | over=17.3")  # last N only
+    first = linearize(_record(), FEATS, fmt="context", prev_outcomes=[])
     assert first.startswith("prev=NONE | ")
 
 

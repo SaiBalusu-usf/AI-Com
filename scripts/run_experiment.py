@@ -30,6 +30,7 @@ import yaml
 
 from cricket_commentary.eval.harness import evaluate
 from cricket_commentary.eval.report import git_commit, write_run_report
+from cricket_commentary.models.fewshot import GeneratorUnavailable
 from cricket_commentary.models.generate import generate_all, generations_payload
 from cricket_commentary.utils.config import apply_overrides, load_config, require
 from cricket_commentary.utils.io import read_jsonl, write_jsonl
@@ -124,16 +125,26 @@ def main() -> None:
 
     try:
         generator = build_generator(cfg, train_rows, args.confirm_spend)
-    except Exception as err:
+    except GeneratorUnavailable as err:
+        # environment blockage, not a code bug (those propagate with traceback)
         log.error("generator for %s could not be built: %s", cfg["name"], err)
         log.error("this blocked attempt should be logged in EXPERIMENTS.md (§9.3)")
+        if args.plan_only:
+            print(f"plan: run={cfg['name']} system={cfg['system']} rows={len(rows)} "
+                  f"split={split} — NOT RUNNABLE HERE: {err}")
+            return
         sys.exit(4)
 
-    est = estimate_seconds(generator, rows)
+    # the harness generates everything twice (once for outputs, once timed
+    # inside the latency pass) — the estimate and any spend approval must
+    # reflect the true call count
+    warmup = int(eval_cfg.get("latency", {}).get("warmup_calls", 5))
+    est = estimate_seconds(generator, rows) * 2 + estimate_seconds(generator, rows[:1]) * warmup
     plan = (
         f"run={cfg['name']} system={cfg['system']} rows={len(rows)} "
         f"split={split} data={dataset_path} seed={seed} "
-        f"estimated_generation={est/60:.1f} min"
+        f"estimated_total_generation={est/60:.1f} min "
+        f"(~{2 * len(rows) + warmup} generate calls incl. latency pass)"
     )
     log.info(plan)
     if args.plan_only:
@@ -189,17 +200,36 @@ def eval_only(args) -> None:
     stored = yaml.safe_load((run_dir / "config.yaml").read_text())
     cfg, eval_cfg = stored["experiment"], stored["eval"]
     set_seed(int(cfg["seed"]))
-    dataset_path = args.data or cfg["data"]["dataset"]
-    split = args.split or cfg["data"].get("split", "test")
+
+    old = json.loads((run_dir / "metrics.json").read_text())
+    stored_meta = old["run"]
+    # the run's recorded provenance, not the config defaults — the run may
+    # have been launched with --data/--split overrides (e.g. the fixture)
+    dataset_path = args.data or stored_meta.get("data") or cfg["data"]["dataset"]
+    split = args.split or stored_meta.get("split") or cfg["data"].get("split", "test")
     rows = select_rows(dataset_path, split)
+    if "linearization" in cfg:
+        from cricket_commentary.data.dataset import relinearize_rows
+
+        rows = relinearize_rows(rows, cfg["linearization"])
     gens = read_jsonl(run_dir / "generations.jsonl")
-    if len(gens) != len(rows):
+    if len(gens) != len(rows) or any(
+        g["match_id"] != r["record"]["match_id"]
+        or g.get("delivery_seq", r["record"].get("delivery_seq"))
+        != r["record"].get("delivery_seq")
+        for g, r in zip(gens, rows)
+    ):
         raise SystemExit(
-            f"stored generations ({len(gens)}) do not align with rows ({len(rows)}); "
-            "pass the same --data/--split the run used"
+            f"stored generations ({len(gens)}) do not align with rows "
+            f"({len(rows)}) from {dataset_path}[{split}]"
         )
     metrics = evaluate(rows, [g["generation"] for g in gens], eval_cfg)
-    stored_meta = json.loads((run_dir / "metrics.json").read_text())["run"]
+    old_latency = old.get("metrics", {}).get("latency", {})
+    if isinstance(old_latency, dict) and "p50_ms" in old_latency:
+        # re-evaluation cannot re-time generation; keep the measured numbers
+        metrics["latency"] = dict(
+            old_latency, note="carried from the original run (eval-only rerun)"
+        )
     stored_meta["reevaluated"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     report_path = write_run_report(run_dir, stored_meta, metrics)
     print(f"re-evaluated {run_dir}\n  report: {report_path}")

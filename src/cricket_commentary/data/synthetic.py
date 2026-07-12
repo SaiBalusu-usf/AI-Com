@@ -152,12 +152,19 @@ def _simulate_innings(
                 striker = batting[next_batter]
                 next_batter += 1
             else:
-                # strike rotation on odd TOTAL runs for byes/legbyes/wides,
-                # odd batter runs otherwise
-                rotating = total if extras_field and "wides" in (extras_field or {}) else (
-                    total if extras_field else batter_runs
-                )
-                if rotating % 2 == 1:
+                # laws of cricket: batters cross when the RUNS PHYSICALLY RUN
+                # are odd — wides exclude the 1-run penalty (nobody runs it),
+                # no-balls rotate on the batter's runs, byes/legbyes on the
+                # runs taken
+                if extras_field and "wides" in extras_field:
+                    ran = extras - 1
+                elif extras_field and "noballs" in extras_field:
+                    ran = batter_runs
+                elif extras_field:
+                    ran = extras
+                else:
+                    ran = batter_runs
+                if ran % 2 == 1:
                     striker, non_striker = non_striker, striker
 
             if target is not None and score >= target:
@@ -285,7 +292,12 @@ def _kind_phrase(record: BallRecord) -> tuple[str, str]:
 
 def write_reference(record: BallRecord, features: dict, seed: int) -> str:
     """Human-style reference line whose excitement tracks salience x tension."""
-    rng = rng_for(seed, record.match_id, record.innings, record.over, record.ball, "ref")
+    # delivery_seq (not ball) keys the stream: wides share the next legal
+    # ball's number and would otherwise draw identical text
+    rng = rng_for(
+        seed, record.match_id, record.innings, record.over,
+        record.delivery_seq, "ref",
+    )
     heat = features["event_salience"] * features["tension"]
     excited = (heat * 1.7 + rng.normal(0, 0.18)) > 0.45
 

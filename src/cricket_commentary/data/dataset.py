@@ -13,7 +13,7 @@ from collections import Counter
 from .clean import clean_targets
 from .features import compute_features
 from .ingest import BallRecord, parse_matches
-from .linearize import linearize
+from .linearize import linearize, outcome_label
 from .splits import split_by_match
 from .synthetic import write_reference
 
@@ -45,9 +45,13 @@ def build_rows(
             "No fallback is silently substituted."
         )
 
+    # how many true previous-delivery outcome labels each row carries; caps
+    # the context_balls any later re-linearization (A1) can request
+    max_context = 4
+
     rows: list[dict] = []
     unmatched = 0
-    prev_by_innings: dict[tuple[str, int], list[BallRecord]] = {}
+    prev_by_innings: dict[tuple[str, int], list[str]] = {}
     for record, feats in zip(records, features):
         key = (record.match_id, record.innings)
         prev = prev_by_innings.setdefault(key, [])
@@ -62,18 +66,21 @@ def build_rows(
             # real corpus rows that have no commentary for this ball are a
             # coverage gap, reported in the dataset card — never silent
             unmatched += 1
-            prev.append(record)
+            prev.append(outcome_label(record))
             continue
         rows.append(
             {
                 "record": record.to_dict(),
                 "features": feats,
+                # true context, computed BEFORE cleaning drops any rows —
+                # this is what makes runtime re-linearization (A1) faithful
+                "prev_outcomes": prev[-max_context:],
                 "linearized_input": linearize(
                     record,
                     feats,
                     fmt=lin_cfg["format"],
                     include_game_state=bool(lin_cfg["include_game_state"]),
-                    prev_records=prev,
+                    prev_outcomes=prev,
                     context_balls=int(lin_cfg["context_balls"]),
                 ),
                 "target_commentary": text,
@@ -82,7 +89,7 @@ def build_rows(
                 "reference_source": commentary_cfg["source"],
             }
         )
-        prev.append(record)
+        prev.append(outcome_label(record))
 
     aligned_records = [BallRecord(**row["record"]) for row in rows]
     kept, stats = clean_targets(
@@ -108,28 +115,38 @@ def relinearize_rows(rows: list[dict], lin_cfg: dict) -> list[dict]:
     """Recompute ``linearized_input`` from record+features with a different
     linearization config — the runtime hook behind ablations A1 (flat vs
     context) and A2 (game-state on/off), so each ablation cell is one config
-    file, not a dataset rebuild. Rows must be in ball order per innings (the
-    dataset writer preserves it)."""
+    file, not a dataset rebuild.
+
+    Context comes from each row's stored ``prev_outcomes`` (captured at build
+    time, before cleaning). Reconstructing it from surviving rows was v1 of
+    this function and prefixed wrong outcomes for every row following a
+    cleaned-away delivery — caught in the phase-7 review."""
+    fmt = lin_cfg.get("format", "flat")
+    context_balls = int(lin_cfg.get("context_balls", 2))
     out: list[dict] = []
-    prev_by_innings: dict[tuple[str, int], list[BallRecord]] = {}
     for row in rows:
-        record = BallRecord(**row["record"])
-        key = (record.match_id, record.innings)
-        prev = prev_by_innings.setdefault(key, [])
+        prev = row.get("prev_outcomes")
+        if fmt == "context":
+            if prev is None:
+                raise ValueError(
+                    "rows lack 'prev_outcomes' — rebuild the dataset "
+                    "(make data) before using context linearization"
+                )
+            if context_balls > 4:
+                raise ValueError("context_balls > 4 exceeds the stored context")
         out.append(
             dict(
                 row,
                 linearized_input=linearize(
-                    record,
+                    BallRecord(**row["record"]),
                     row["features"],
-                    fmt=lin_cfg.get("format", "flat"),
+                    fmt=fmt,
                     include_game_state=bool(lin_cfg.get("include_game_state", True)),
-                    prev_records=prev,
-                    context_balls=int(lin_cfg.get("context_balls", 2)),
+                    prev_outcomes=prev,
+                    context_balls=context_balls,
                 ),
             )
         )
-        prev.append(record)
     return out
 
 

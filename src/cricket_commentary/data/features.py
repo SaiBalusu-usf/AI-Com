@@ -64,8 +64,11 @@ def tension(
 ) -> float:
     if record.target is not None:  # chase
         cfg = tension_cfg["chase"]
-        rrr_val = rrr if rrr is not None else max(crr, 12.0)  # no balls left: max pressure proxy
-        pressure = _sigmoid((rrr_val - crr) / float(cfg["rrr_scale"]))
+        if record.team_score >= record.target:
+            pressure = 0.0  # chase already won — including on the final ball
+        else:
+            rrr_val = rrr if rrr is not None else max(crr, 12.0)  # no balls left: max pressure proxy
+            pressure = _sigmoid((rrr_val - crr) / float(cfg["rrr_scale"]))
         wickets_in_hand = max(10 - record.team_wickets, 0)
         progress = record.balls_bowled / record.innings_balls_total
         value = (
@@ -81,7 +84,11 @@ def tension(
 
 
 def compute_features(records: list[BallRecord], features_cfg: dict) -> list[dict]:
-    """Feature dict per record. Records must be in match/innings order."""
+    """Feature dict per record. Records must be in match/innings order.
+
+    ``momentum`` sums runs off the previous ``momentum_window_balls``
+    DELIVERIES (wides/no-balls occupy window slots) — a deliberate v1
+    semantics choice, documented here because the config key says "balls"."""
     window = int(features_cfg["momentum_window_balls"])
     out: list[dict] = []
     # recent (record_key, runs_total) per innings for momentum

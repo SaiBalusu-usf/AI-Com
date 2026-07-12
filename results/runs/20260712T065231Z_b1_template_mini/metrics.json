@@ -1,50 +1,51 @@
 {
   "run": {
-    "name": "b1_template_nogamestate",
+    "name": "b1_template_mini",
     "system": "template",
-    "config_path": "configs/ablations/a2_template_nogamestate.yaml",
+    "config_path": "configs/baseline_template.yaml",
     "overrides": [],
-    "data": "data/processed/dataset.jsonl",
-    "split": "test",
-    "n_rows": 697,
+    "data": "data/fixtures/mini.jsonl",
+    "split": "all",
+    "n_rows": 200,
     "seed": 13,
-    "timestamp": "20260712T062532Z",
-    "git_commit": "730c79f"
+    "timestamp": "20260712T065231Z",
+    "git_commit": "6dd63cc",
+    "reevaluated": "2026-07-12T06:53:17.406468+00:00"
   },
   "metrics": {
     "faithfulness": {
-      "n": 697,
+      "n": 200,
       "hallucination_rate": 0.0,
       "omission_rate": 0.0,
       "faithfulness_score": 1.0,
       "per_slot": {
         "attribution": {
-          "claims": 139,
+          "claims": 41,
           "false_claims": 0,
           "precision": 1.0
         },
         "boundary": {
-          "claims": 153,
+          "claims": 53,
           "false_claims": 0,
           "precision": 1.0
         },
         "milestone": {
-          "claims": 10,
+          "claims": 2,
           "false_claims": 0,
           "precision": 1.0
         },
         "runs": {
-          "claims": 418,
+          "claims": 87,
           "false_claims": 0,
           "precision": 1.0
         },
         "score": {
-          "claims": 151,
+          "claims": 38,
           "false_claims": 0,
           "precision": 1.0
         },
         "wicket": {
-          "claims": 49,
+          "claims": 26,
           "false_claims": 0,
           "precision": 1.0
         }
@@ -64,61 +65,62 @@
       },
       "reference_baseline": {
         "hallucination_rate": 0.0,
-        "omission_rate": 0.1287
+        "omission_rate": 0.2025
       }
     },
     "excitement": {
       "reference_validation": {
-        "spearman_rho": 0.6993437929419011,
-        "n": 697,
+        "spearman_rho": 0.8063743775129548,
+        "n": 200,
         "mode": "heuristic",
         "fallback_reason": "excitement model half needs transformers, which is not installed: No module named 'transformers'",
         "per_phase": {
-          "powerplay": 0.5779509802920956,
-          "middle": 0.6319395725029487,
-          "death": 0.8049914787785691
+          "powerplay": 0.6733447444797671,
+          "middle": 0.8035068017719897,
+          "death": 0.8560516955976089
         },
         "passed": true
       },
       "calibration": {
-        "spearman_rho": 0.04646809321453032,
-        "n": 697,
+        "spearman_rho": 0.6853402930713176,
+        "n": 200,
         "mode": "heuristic",
         "fallback_reason": "excitement model half needs transformers, which is not installed: No module named 'transformers'",
         "per_phase": {
-          "powerplay": null,
-          "middle": 0.07995090187785225,
-          "death": null
+          "powerplay": 0.4614976368810153,
+          "middle": 0.721234059195347,
+          "death": 0.7938772010280456
         },
         "passed": true
       }
     },
     "surface": {
-      "bleu": 5.601752204034898,
-      "rouge_l": 0.3040528985698288,
+      "bleu": 6.024817981736972,
+      "rouge_l": 0.30630968655603463,
       "bert_score": {
         "status": "unavailable",
         "reason": "bert-score/torch not installed or not loadable: No module named 'bert_score'"
       }
     },
     "diversity": {
-      "distinct_1": 0.20467812034761396,
-      "distinct_2": 0.4021430862814758,
-      "self_bleu": 0.0797953985906085,
-      "repetition_4gram_rate": 0.03479576399394856,
-      "n_generations": 697
+      "distinct_1": 0.579202014962049,
+      "distinct_2": 0.7912146872727831,
+      "self_bleu": 0.0806022624464424,
+      "repetition_4gram_rate": 0.038461538461538464,
+      "n_generations": 200
     },
     "latency": {
-      "n_timed": 697,
-      "p50_ms": 0.061668999933317536,
-      "p95_ms": 0.11538620001374485,
-      "mean_ms": 0.0723006025830674,
-      "tokens_per_sec": 91579.23478978156,
+      "n_timed": 200,
+      "p50_ms": 0.0554479997845192,
+      "p95_ms": 0.08811704994968747,
+      "mean_ms": 0.05942834501411198,
+      "tokens_per_sec": 114423.51286049203,
       "hardware": {
         "platform": "Linux-6.18.5-x86_64-with-glibc2.39",
         "cpu_count": 4,
         "torch_device": "not_installed"
-      }
+      },
+      "note": "carried from the original run (eval-only rerun)"
     }
   }
 }

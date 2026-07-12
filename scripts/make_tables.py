@@ -76,12 +76,15 @@ def group_rows(rows: list[dict]) -> list[dict]:
                "seeds": len(members)}
         for col, _, _ in COLUMNS:
             values = [m[col] for m in members if m[col] is not None]
+            # partial=True when only a subset of the group's runs reported the
+            # metric — rendered with a marker so it can't pass as a full mean
+            partial = 0 < len(values) < len(members)
             if not values:
                 agg[col] = None
             elif len(values) == 1:
-                agg[col] = (values[0], None)
+                agg[col] = (values[0], None, partial)
             else:
-                agg[col] = (mean(values), stdev(values))
+                agg[col] = (mean(values), stdev(values), partial)
         out.append(agg)
     return out
 
@@ -89,10 +92,12 @@ def group_rows(rows: list[dict]) -> list[dict]:
 def _fmt(cell, digits=3) -> str:
     if cell is None:
         return "—"
-    value, spread = cell
+    value, spread, partial = cell
     text = f"{value:.{digits}f}"
     if spread is not None:
         text += f" ± {spread:.{digits}f}"
+    if partial:
+        text += "*"  # metric missing from some runs in the seed group
     return text
 
 
@@ -107,7 +112,8 @@ def write_tables(grouped: list[dict], out_dir: Path) -> None:
     (out_dir / "main_results.md").write_text(
         "# Main results\n\nAggregated from results/runs by scripts/make_tables.py — "
         "'—' means the metric was recorded unavailable/blocked for that run, "
-        "never imputed.\n\n" + "\n".join(md) + "\n"
+        "never imputed. 'seeds' counts aggregated runs; a '*' marks a value "
+        "reported by only a subset of the group's runs.\n\n" + "\n".join(md) + "\n"
     )
 
     tex = [

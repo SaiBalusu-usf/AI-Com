@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import yaml
 
+from cricket_commentary.eval.base import spearman
 from cricket_commentary.eval.excitement import excitement_scores
 from cricket_commentary.eval.report import load_all_runs
 from cricket_commentary.utils.io import read_jsonl
@@ -156,7 +157,9 @@ def fig_excitement_calibration(runs, out_dir, max_points=300):
         scores, _ = excitement_scores([g["generation"] for g in gens], {"mode": "heuristic"})
         scores = np.array(scores)
         idx = rng.choice(len(rows), size=min(max_points, len(rows)), replace=False)
-        rho = run["metrics"].get("excitement", {}).get("calibration", {}).get("spearman_rho")
+        # annotate rho recomputed from the SAME heuristic scores plotted here
+        # (the stored calibration rho may come from model+heuristic mode)
+        rho = spearman(scores.tolist(), signal.tolist())
         label = run["run"]["name"] + (f" (ρ={rho:.2f})" if isinstance(rho, float) else "")
         jitter = rng.normal(0, 0.006, size=len(idx))
         # color per RUN here (fixed slot order): several runs can share one
@@ -177,13 +180,18 @@ def fig_excitement_calibration(runs, out_dir, max_points=300):
 def fig_hallucination_by_slot(runs, out_dir):
     fig, ax = plt.subplots(figsize=(ACL_WIDTH, 2.5))
     systems, slot_data = [], {}
-    for run in runs:
+    seen_names: dict[str, int] = {}
+    for run in dedup_seed_runs(runs):
         faith = run["metrics"].get("faithfulness", {})
         by_type = faith.get("violations_by_type")
         n = faith.get("n")
         if by_type is None or not n:
             continue
         name = run["run"]["name"]
+        # runs sharing a name (untagged seed repeats) must not shadow each other
+        seen_names[name] = seen_names.get(name, 0) + 1
+        if seen_names[name] > 1:
+            name = f"{name}#{seen_names[name]}"
         systems.append((name, _color(run)))
         for slot, count in by_type.items():
             slot_data.setdefault(slot, {})[name] = 100.0 * count / n

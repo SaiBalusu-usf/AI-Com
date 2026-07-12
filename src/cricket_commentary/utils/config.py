@@ -41,7 +41,9 @@ def load_config(path: str | Path) -> dict:
     if parent is not None:
         base = load_config(path.parent / parent)
         cfg = _deep_merge(base, cfg)
-    cfg.setdefault("_config_path", str(path))
+    # always the CHILD's path — after an extends-merge the parent's value is
+    # in cfg and setdefault would report the wrong file in error messages
+    cfg["_config_path"] = str(path)
     return cfg
 
 
@@ -58,10 +60,13 @@ def apply_overrides(cfg: dict, overrides: list[str]) -> dict:
         dotted, raw = item.split("=", 1)
         node = cfg
         keys = dotted.split(".")
-        for key in keys[:-1]:
-            if key not in node or not isinstance(node[key], dict):
-                node[key] = {}
-            node = node[key]
+        for i, key in enumerate(keys[:-1]):
+            if key in node and not isinstance(node[key], dict):
+                raise ConfigError(
+                    f"override {item!r} traverses non-mapping key "
+                    f"'{'.'.join(keys[: i + 1])}' (value {node[key]!r})"
+                )
+            node = node.setdefault(key, {})
         node[keys[-1]] = _parse_scalar(raw)
     return cfg
 

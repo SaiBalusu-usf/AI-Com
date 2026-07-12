@@ -9,7 +9,7 @@ experiment:
     use_game_state: false
     excitement_gate: 0.45
   eval_config: configs/eval.yaml
-  _config_path: configs/ablations/../baseline_template.yaml
+  _config_path: configs/ablations/a2_template_nogamestate.yaml
 eval:
   seed: 13
   factcheck:

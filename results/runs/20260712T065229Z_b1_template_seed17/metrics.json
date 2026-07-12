@@ -1,50 +1,52 @@
 {
   "run": {
-    "name": "b1_template_mini",
+    "name": "b1_template_seed17",
     "system": "template",
     "config_path": "configs/baseline_template.yaml",
-    "overrides": [],
-    "data": "data/fixtures/mini.jsonl",
-    "split": "all",
-    "n_rows": 200,
-    "seed": 13,
-    "timestamp": "20260712T062340Z",
-    "git_commit": "c5b9bc7"
+    "overrides": [
+      "seed=17"
+    ],
+    "data": "data/processed/dataset.jsonl",
+    "split": "test",
+    "n_rows": 689,
+    "seed": 17,
+    "timestamp": "20260712T065229Z",
+    "git_commit": "6dd63cc"
   },
   "metrics": {
     "faithfulness": {
-      "n": 200,
+      "n": 689,
       "hallucination_rate": 0.0,
       "omission_rate": 0.0,
       "faithfulness_score": 1.0,
       "per_slot": {
         "attribution": {
-          "claims": 45,
+          "claims": 142,
           "false_claims": 0,
           "precision": 1.0
         },
         "boundary": {
-          "claims": 47,
+          "claims": 148,
           "false_claims": 0,
           "precision": 1.0
         },
         "milestone": {
-          "claims": 3,
+          "claims": 10,
           "false_claims": 0,
           "precision": 1.0
         },
         "runs": {
-          "claims": 103,
+          "claims": 416,
           "false_claims": 0,
           "precision": 1.0
         },
         "score": {
-          "claims": 32,
+          "claims": 133,
           "false_claims": 0,
           "precision": 1.0
         },
         "wicket": {
-          "claims": 22,
+          "claims": 49,
           "false_claims": 0,
           "precision": 1.0
         }
@@ -64,56 +66,56 @@
       },
       "reference_baseline": {
         "hallucination_rate": 0.0,
-        "omission_rate": 0.1594
+        "omission_rate": 0.1168
       }
     },
     "excitement": {
       "reference_validation": {
-        "spearman_rho": 0.7841258924127796,
-        "n": 200,
+        "spearman_rho": 0.7070649116108282,
+        "n": 689,
         "mode": "heuristic",
         "fallback_reason": "excitement model half needs transformers, which is not installed: No module named 'transformers'",
         "per_phase": {
-          "powerplay": 0.650644273585217,
-          "middle": 0.7695641948462404,
-          "death": 0.8640710400534571
+          "powerplay": 0.6010030651630033,
+          "middle": 0.642444297605696,
+          "death": 0.8092465080031782
         },
         "passed": true
       },
       "calibration": {
-        "spearman_rho": 0.6501333274859459,
-        "n": 200,
+        "spearman_rho": 0.5485421796822253,
+        "n": 689,
         "mode": "heuristic",
         "fallback_reason": "excitement model half needs transformers, which is not installed: No module named 'transformers'",
         "per_phase": {
-          "powerplay": 0.4825746421988176,
-          "middle": 0.698883205550179,
-          "death": 0.7129667456017025
+          "powerplay": 0.4653468840356387,
+          "middle": 0.5041884408919581,
+          "death": 0.6911748167503455
         },
         "passed": true
       }
     },
     "surface": {
-      "bleu": 6.29899502816182,
-      "rouge_l": 0.3140443060489292,
+      "bleu": 6.451020512606611,
+      "rouge_l": 0.3148073137047411,
       "bert_score": {
         "status": "unavailable",
         "reason": "bert-score/torch not installed or not loadable: No module named 'bert_score'"
       }
     },
     "diversity": {
-      "distinct_1": 0.5742295573763155,
-      "distinct_2": 0.7869552368755636,
-      "self_bleu": 0.08742232335021617,
-      "repetition_4gram_rate": 0.023121387283236993,
-      "n_generations": 200
+      "distinct_1": 0.22427376071539512,
+      "distinct_2": 0.43388805338368525,
+      "self_bleu": 0.0695246401037901,
+      "repetition_4gram_rate": 0.0486322188449848,
+      "n_generations": 689
     },
     "latency": {
-      "n_timed": 200,
-      "p50_ms": 0.05439200003820588,
-      "p95_ms": 0.08602015018368546,
-      "mean_ms": 0.05859009500909451,
-      "tokens_per_sec": 115463.2024226948,
+      "n_timed": 689,
+      "p50_ms": 0.05542400003832881,
+      "p95_ms": 0.08771420016273625,
+      "mean_ms": 0.05949404064158021,
+      "tokens_per_sec": 112145.49082595826,
       "hardware": {
         "platform": "Linux-6.18.5-x86_64-with-glibc2.39",
         "cpu_count": 4,

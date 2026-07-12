@@ -1,30 +1,32 @@
 {
   "run": {
-    "name": "b1_template",
+    "name": "b1_template_seed23",
     "system": "template",
     "config_path": "configs/baseline_template.yaml",
-    "overrides": [],
+    "overrides": [
+      "seed=23"
+    ],
     "data": "data/processed/dataset.jsonl",
     "split": "test",
-    "n_rows": 697,
-    "seed": 13,
-    "timestamp": "20260712T062316Z",
-    "git_commit": "c5b9bc7"
+    "n_rows": 689,
+    "seed": 23,
+    "timestamp": "20260712T065230Z",
+    "git_commit": "6dd63cc"
   },
   "metrics": {
     "faithfulness": {
-      "n": 697,
+      "n": 689,
       "hallucination_rate": 0.0,
       "omission_rate": 0.0,
       "faithfulness_score": 1.0,
       "per_slot": {
         "attribution": {
-          "claims": 131,
+          "claims": 146,
           "false_claims": 0,
           "precision": 1.0
         },
         "boundary": {
-          "claims": 153,
+          "claims": 148,
           "false_claims": 0,
           "precision": 1.0
         },
@@ -34,12 +36,12 @@
           "precision": 1.0
         },
         "runs": {
-          "claims": 418,
+          "claims": 416,
           "false_claims": 0,
           "precision": 1.0
         },
         "score": {
-          "claims": 151,
+          "claims": 119,
           "false_claims": 0,
           "precision": 1.0
         },
@@ -64,56 +66,56 @@
       },
       "reference_baseline": {
         "hallucination_rate": 0.0,
-        "omission_rate": 0.1287
+        "omission_rate": 0.1168
       }
     },
     "excitement": {
       "reference_validation": {
-        "spearman_rho": 0.6993437929419011,
-        "n": 697,
+        "spearman_rho": 0.7070649116108282,
+        "n": 689,
         "mode": "heuristic",
         "fallback_reason": "excitement model half needs transformers, which is not installed: No module named 'transformers'",
         "per_phase": {
-          "powerplay": 0.5779509802920956,
-          "middle": 0.6319395725029487,
-          "death": 0.8049914787785691
+          "powerplay": 0.6010030651630033,
+          "middle": 0.642444297605696,
+          "death": 0.8092465080031782
         },
         "passed": true
       },
       "calibration": {
-        "spearman_rho": 0.5400443460912644,
-        "n": 697,
+        "spearman_rho": 0.5487075595164026,
+        "n": 689,
         "mode": "heuristic",
         "fallback_reason": "excitement model half needs transformers, which is not installed: No module named 'transformers'",
         "per_phase": {
-          "powerplay": 0.4586490406685124,
-          "middle": 0.4842245384318736,
-          "death": 0.6917729770194861
+          "powerplay": 0.46540152145304337,
+          "middle": 0.5037598327961333,
+          "death": 0.6894848422328237
         },
         "passed": true
       }
     },
     "surface": {
-      "bleu": 5.981785864873317,
-      "rouge_l": 0.3011551949846996,
+      "bleu": 5.3416968144869665,
+      "rouge_l": 0.3011867247224306,
       "bert_score": {
         "status": "unavailable",
         "reason": "bert-score/torch not installed or not loadable: No module named 'bert_score'"
       }
     },
     "diversity": {
-      "distinct_1": 0.21669274956094217,
-      "distinct_2": 0.4117902529887531,
-      "self_bleu": 0.07345704777215258,
-      "repetition_4gram_rate": 0.036308623298033284,
-      "n_generations": 697
+      "distinct_1": 0.21742230984252975,
+      "distinct_2": 0.4168503767731333,
+      "self_bleu": 0.09275885816722053,
+      "repetition_4gram_rate": 0.03709428129829984,
+      "n_generations": 689
     },
     "latency": {
-      "n_timed": 697,
-      "p50_ms": 0.05465699996420881,
-      "p95_ms": 0.09552759997859538,
-      "mean_ms": 0.05942353944908665,
-      "tokens_per_sec": 111738.29906363296,
+      "n_timed": 689,
+      "p50_ms": 0.0554489997739438,
+      "p95_ms": 0.0896318000741303,
+      "mean_ms": 0.06019600145133545,
+      "tokens_per_sec": 108957.08491704482,
       "hardware": {
         "platform": "Linux-6.18.5-x86_64-with-glibc2.39",
         "cpu_count": 4,

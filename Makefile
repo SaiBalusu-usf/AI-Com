@@ -3,8 +3,9 @@
 PYTHON ?= $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python3)
 PIP    := $(PYTHON) -m pip
 
-.PHONY: venv setup setup-full setup-cuda test data fixture mini baseline \
-        train-t5 train-qwen ablations eval tables figures repro clean
+.PHONY: venv setup setup-full setup-cuda test data download fixture mini \
+        baseline train-t5 train-t5-smoke train-qwen train-qwen-smoke \
+        ablations eval tables figures repro clean
 
 venv:
 	python3 -m venv .venv

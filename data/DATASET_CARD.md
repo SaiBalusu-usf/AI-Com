@@ -56,13 +56,19 @@ data_source, reference_source: provenance tags
 ## Current counts (synthetic, seed=13, 48 matches)
 
 From `data/processed/dataset.stats.json`, regenerate with `make data`:
-- 11,388 candidate balls → 8,292 rows kept
-- splits by match: train 6,910 / val 685 / test 697 rows
-- cleaning drops: 3,096 exact duplicates (short lines like wides/dots repeat
+- 11,388 candidate balls → 8,303 rows kept
+- splits by match: train 6,926 / val 688 / test 689 rows
+- cleaning drops: 3,085 exact duplicates (short lines like wides/dots repeat
   verbatim in template-written references; expected to be far rarer in real
   human commentary), 0 length violations, 0 entity mismatches (guaranteed by
   construction for synthetic references — this check earns its keep on real
   data)
+
+Rows also carry `prev_outcomes` — the outcome labels of the preceding
+deliveries captured BEFORE cleaning, so runtime re-linearization (ablation
+A1 context format) always prefixes factually true context. Per-delivery joins
+must use `record.delivery_seq`, not `(over, ball)` — wides share the upcoming
+legal ball's number.
 
 Fixture: `data/fixtures/mini.jsonl`, 200 rows stratified across event types
 (wickets, sixes, fours, dots, extras, chase balls), 6 matches, splits

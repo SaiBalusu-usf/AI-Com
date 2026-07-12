@@ -1,41 +1,41 @@
-# Run report: b1_template_seed17
+# Run report: b1_template_nogamestate
 
 ## Run info
 
 | field | value |
 | --- | --- |
-| name | b1_template_seed17 |
+| name | b1_template_nogamestate |
 | system | template |
-| config_path | configs/baseline_template.yaml |
-| overrides | ['seed=17'] |
+| config_path | configs/ablations/a2_template_nogamestate.yaml |
+| overrides | [] |
 | data | data/processed/dataset.jsonl |
 | split | test |
-| n_rows | 697 |
-| seed | 17 |
-| timestamp | 20260712T062534Z |
-| git_commit | 730c79f |
+| n_rows | 689 |
+| seed | 13 |
+| timestamp | 20260712T065227Z |
+| git_commit | 6dd63cc |
 
 ## faithfulness
 
 | metric | value |
 | --- | --- |
-| n | 697 |
+| n | 689 |
 | hallucination_rate | 0.0000 |
 | omission_rate | 0.0000 |
 | faithfulness_score | 1.0000 |
-| per_slot.attribution.claims | 150 |
+| per_slot.attribution.claims | 142 |
 | per_slot.attribution.false_claims | 0 |
 | per_slot.attribution.precision | 1.0000 |
-| per_slot.boundary.claims | 153 |
+| per_slot.boundary.claims | 148 |
 | per_slot.boundary.false_claims | 0 |
 | per_slot.boundary.precision | 1.0000 |
 | per_slot.milestone.claims | 10 |
 | per_slot.milestone.false_claims | 0 |
 | per_slot.milestone.precision | 1.0000 |
-| per_slot.runs.claims | 416 |
+| per_slot.runs.claims | 421 |
 | per_slot.runs.false_claims | 0 |
 | per_slot.runs.precision | 1.0000 |
-| per_slot.score.claims | 142 |
+| per_slot.score.claims | 148 |
 | per_slot.score.false_claims | 0 |
 | per_slot.score.precision | 1.0000 |
 | per_slot.wicket.claims | 49 |
@@ -47,56 +47,56 @@
 | examples.violations | [] |
 | examples.omissions | [] |
 | reference_baseline.hallucination_rate | 0.0000 |
-| reference_baseline.omission_rate | 0.1287 |
+| reference_baseline.omission_rate | 0.1168 |
 
 ## excitement
 
 | metric | value |
 | --- | --- |
-| reference_validation.spearman_rho | 0.6993 |
-| reference_validation.n | 697 |
+| reference_validation.spearman_rho | 0.7071 |
+| reference_validation.n | 689 |
 | reference_validation.mode | heuristic |
 | reference_validation.fallback_reason | excitement model half needs transformers, which is not installed: No module named 'transformers' |
-| reference_validation.per_phase.powerplay | 0.5780 |
-| reference_validation.per_phase.middle | 0.6319 |
-| reference_validation.per_phase.death | 0.8050 |
+| reference_validation.per_phase.powerplay | 0.6010 |
+| reference_validation.per_phase.middle | 0.6424 |
+| reference_validation.per_phase.death | 0.8092 |
 | reference_validation.passed | True |
-| calibration.spearman_rho | 0.5398 |
-| calibration.n | 697 |
+| calibration.spearman_rho | 0.0463 |
+| calibration.n | 689 |
 | calibration.mode | heuristic |
 | calibration.fallback_reason | excitement model half needs transformers, which is not installed: No module named 'transformers' |
-| calibration.per_phase.powerplay | 0.4582 |
-| calibration.per_phase.middle | 0.4842 |
-| calibration.per_phase.death | 0.6891 |
+| calibration.per_phase.powerplay | - |
+| calibration.per_phase.middle | 0.0769 |
+| calibration.per_phase.death | - |
 | calibration.passed | True |
 
 ## surface
 
 | metric | value |
 | --- | --- |
-| bleu | 6.6585 |
-| rouge_l | 0.3131 |
+| bleu | 5.5353 |
+| rouge_l | 0.3027 |
 | bert_score | unavailable (bert-score/torch not installed or not loadable: No module named 'bert_score') |
 
 ## diversity
 
 | metric | value |
 | --- | --- |
-| distinct_1 | 0.2201 |
-| distinct_2 | 0.4267 |
-| self_bleu | 0.0819 |
-| repetition_4gram_rate | 0.0392 |
-| n_generations | 697 |
+| distinct_1 | 0.2099 |
+| distinct_2 | 0.4115 |
+| self_bleu | 0.1087 |
+| repetition_4gram_rate | 0.0322 |
+| n_generations | 689 |
 
 ## latency
 
 | metric | value |
 | --- | --- |
-| n_timed | 697 |
-| p50_ms | 0.0541 |
-| p95_ms | 0.0907 |
-| mean_ms | 0.0585 |
-| tokens_per_sec | 113889.4532 |
+| n_timed | 689 |
+| p50_ms | 0.0547 |
+| p95_ms | 0.0989 |
+| mean_ms | 0.0628 |
+| tokens_per_sec | 105583.9154 |
 | hardware.platform | Linux-6.18.5-x86_64-with-glibc2.39 |
 | hardware.cpu_count | 4 |
 | hardware.torch_device | not_installed |

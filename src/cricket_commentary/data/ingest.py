@@ -59,6 +59,10 @@ class BallRecord:
     batter_balls_faced: int = 0    # legal balls faced by batter incl. this one
     completed_over_runs: int | None = None  # total runs in the over, set on its final ball (maiden check)
     squad: list[str] = field(default_factory=list)  # all player names in the match (misattribution checks)
+    # 1-based position within the over counting EVERY delivery. Unlike `ball`
+    # this is unique: wides/no-balls share the upcoming legal ball's number,
+    # so (over, ball) alone must never be used as a per-delivery key.
+    delivery_seq: int = 1
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -154,6 +158,7 @@ def parse_match(match: dict, match_id: str) -> list[BallRecord]:
                         innings=innings_no,
                         over=over_1based,
                         ball=min(legal_in_over + (0 if legal else 1), 6),
+                        delivery_seq=idx + 1,
                         is_legal=legal,
                         batting_team=batting_team,
                         bowling_team=bowling_team,

@@ -72,6 +72,13 @@ def main() -> None:
         sys.exit(3)
 
     rows = read_jsonl(dataset)
+    if "linearization" in cfg:
+        # A1/A2 cells: training inputs must match what evaluation will use —
+        # run_experiment re-linearizes the same way (phase-7 review finding)
+        from cricket_commentary.data.dataset import relinearize_rows
+
+        rows = relinearize_rows(rows, cfg["linearization"])
+        log.info("re-linearized training inputs with %s", cfg["linearization"])
     rows_train = [r for r in rows if r["split"] == "train"]
     rows_val = [r for r in rows if r["split"] == "val"] or rows_train[:32]
 

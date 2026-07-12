@@ -28,6 +28,9 @@ def generations_payload(rows: list[dict], texts: list[str]) -> Iterable[dict]:
             "innings": record["innings"],
             "over": record["over"],
             "ball": record["ball"],
+            # unique within the over (wides share the legal ball's number) —
+            # required for unambiguous joins back to dataset rows
+            "delivery_seq": record.get("delivery_seq"),
             "linearized_input": row["linearized_input"],
             "reference": row["target_commentary"],
             "generation": text,

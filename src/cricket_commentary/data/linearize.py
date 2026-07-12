@@ -37,9 +37,13 @@ def linearize(
     features: dict,
     fmt: str = "flat",
     include_game_state: bool = True,
-    prev_records: list[BallRecord] | None = None,
+    prev_outcomes: list[str] | None = None,
     context_balls: int = 2,
 ) -> str:
+    """``prev_outcomes`` are outcome labels of the PRECEDING DELIVERIES of the
+    innings in order (computed at dataset build time, before any cleaning —
+    reconstructing them from surviving rows would silently skip dropped
+    deliveries and prefix factually wrong context)."""
     parts = [
         f"over={over_ball_display(record)}",
         f"batter={record.batter}",
@@ -62,10 +66,7 @@ def linearize(
 
     line = " | ".join(parts)
     if fmt == "context":
-        prev = [
-            outcome_label(r)
-            for r in (prev_records or [])[-context_balls:]
-        ]
+        prev = (prev_outcomes or [])[-context_balls:]
         prefix = f"prev={','.join(prev) if prev else 'NONE'} | "
         line = prefix + line
     elif fmt != "flat":
