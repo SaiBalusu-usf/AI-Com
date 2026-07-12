@@ -104,6 +104,35 @@ def build_rows(
     return kept, summary
 
 
+def relinearize_rows(rows: list[dict], lin_cfg: dict) -> list[dict]:
+    """Recompute ``linearized_input`` from record+features with a different
+    linearization config — the runtime hook behind ablations A1 (flat vs
+    context) and A2 (game-state on/off), so each ablation cell is one config
+    file, not a dataset rebuild. Rows must be in ball order per innings (the
+    dataset writer preserves it)."""
+    out: list[dict] = []
+    prev_by_innings: dict[tuple[str, int], list[BallRecord]] = {}
+    for row in rows:
+        record = BallRecord(**row["record"])
+        key = (record.match_id, record.innings)
+        prev = prev_by_innings.setdefault(key, [])
+        out.append(
+            dict(
+                row,
+                linearized_input=linearize(
+                    record,
+                    row["features"],
+                    fmt=lin_cfg.get("format", "flat"),
+                    include_game_state=bool(lin_cfg.get("include_game_state", True)),
+                    prev_records=prev,
+                    context_balls=int(lin_cfg.get("context_balls", 2)),
+                ),
+            )
+        )
+        prev.append(record)
+    return out
+
+
 def stratified_fixture(rows: list[dict], n_rows: int, seed: int) -> list[dict]:
     """Cap rows for the committed fixture while guaranteeing event coverage:
     wickets, sixes, fours, dots, extras, death-phase and chase balls all

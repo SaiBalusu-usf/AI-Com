@@ -349,6 +349,16 @@ def test_wicket_idioms_are_not_wicket_claims():
         assert _violation_slots(text, rec) == set(), text
 
 
+def test_bowled_him_at_sentence_end_is_a_dismissal():
+    # caught by the phase-3 baseline run: "Bowled him. R Wadekar goes." was
+    # not extracted because the pronoun rule ignored sentence punctuation
+    rec = _record(wicket=True, wicket_type="bowled", player_out="V Kohli")
+    for text in ["Bowled him. Kohli goes.", "Bowled him!", "Bowled her, no doubt."]:
+        res = check_generation(text, rec)
+        assert any(c.slot == "wicket" for c in res.claims), text
+        assert res.omissions == [], text
+
+
 def test_cleaned_him_up_is_a_bowled_claim():
     assert "wicket" in _violation_slots("Cleaned him up! The stumps are shattered!", _record())
     real = _record(wicket=True, wicket_type="bowled", player_out="V Kohli")

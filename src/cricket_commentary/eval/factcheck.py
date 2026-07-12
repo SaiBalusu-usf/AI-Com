@@ -269,8 +269,11 @@ def extract_claims(text: str) -> list[Claim]:
                     continue
                 if after and after[0] in _ARTICLE_AFTER_BOWLED:
                     continue
-                # "bowled him!" is a dismissal; "bowled him a bouncer" is not
-                if after and after[0] in ("him", "her") and len(after) > 1:
+                # "bowled him!" / "bowled him." are dismissals; only a
+                # CONTINUING clause ("bowled him a bouncer") is bowling talk —
+                # check raw text so sentence punctuation is respected
+                pronoun = re.match(r"\s*(?:him|her)\b", text[m.end():], re.I)
+                if pronoun and re.match(r"\s*\w", text[m.end() + pronoun.end():]):
                     continue
             claims.append(Claim("wicket", kind, m.group(0)))
             break  # one claim per kind is enough

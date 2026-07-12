@@ -1,0 +1,124 @@
+{
+  "run": {
+    "name": "b1_template",
+    "system": "template",
+    "config_path": "configs/baseline_template.yaml",
+    "overrides": [],
+    "data": "data/processed/dataset.jsonl",
+    "split": "test",
+    "n_rows": 697,
+    "seed": 13,
+    "timestamp": "20260712T062316Z",
+    "git_commit": "c5b9bc7"
+  },
+  "metrics": {
+    "faithfulness": {
+      "n": 697,
+      "hallucination_rate": 0.0,
+      "omission_rate": 0.0,
+      "faithfulness_score": 1.0,
+      "per_slot": {
+        "attribution": {
+          "claims": 131,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "boundary": {
+          "claims": 153,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "milestone": {
+          "claims": 10,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "runs": {
+          "claims": 418,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "score": {
+          "claims": 151,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "wicket": {
+          "claims": 49,
+          "false_claims": 0,
+          "precision": 1.0
+        }
+      },
+      "violations_by_type": {},
+      "recall": {
+        "wicket_mentioned": 1.0,
+        "boundary_mentioned": 1.0
+      },
+      "ner": {
+        "status": "unavailable",
+        "reason": "spacy model 'en_core_web_sm' not downloadable/installed: [E050] Can't find model 'en_core_web_sm'. It doesn't seem to be a Python package or a valid path to a data directory."
+      },
+      "examples": {
+        "violations": [],
+        "omissions": []
+      },
+      "reference_baseline": {
+        "hallucination_rate": 0.0,
+        "omission_rate": 0.1287
+      }
+    },
+    "excitement": {
+      "reference_validation": {
+        "spearman_rho": 0.6993437929419011,
+        "n": 697,
+        "mode": "heuristic",
+        "fallback_reason": "excitement model half needs transformers, which is not installed: No module named 'transformers'",
+        "per_phase": {
+          "powerplay": 0.5779509802920956,
+          "middle": 0.6319395725029487,
+          "death": 0.8049914787785691
+        },
+        "passed": true
+      },
+      "calibration": {
+        "spearman_rho": 0.5400443460912644,
+        "n": 697,
+        "mode": "heuristic",
+        "fallback_reason": "excitement model half needs transformers, which is not installed: No module named 'transformers'",
+        "per_phase": {
+          "powerplay": 0.4586490406685124,
+          "middle": 0.4842245384318736,
+          "death": 0.6917729770194861
+        },
+        "passed": true
+      }
+    },
+    "surface": {
+      "bleu": 5.981785864873317,
+      "rouge_l": 0.3011551949846996,
+      "bert_score": {
+        "status": "unavailable",
+        "reason": "bert-score/torch not installed or not loadable: No module named 'bert_score'"
+      }
+    },
+    "diversity": {
+      "distinct_1": 0.21669274956094217,
+      "distinct_2": 0.4117902529887531,
+      "self_bleu": 0.07345704777215258,
+      "repetition_4gram_rate": 0.036308623298033284,
+      "n_generations": 697
+    },
+    "latency": {
+      "n_timed": 697,
+      "p50_ms": 0.05465699996420881,
+      "p95_ms": 0.09552759997859538,
+      "mean_ms": 0.05942353944908665,
+      "tokens_per_sec": 111738.29906363296,
+      "hardware": {
+        "platform": "Linux-6.18.5-x86_64-with-glibc2.39",
+        "cpu_count": 4,
+        "torch_device": "not_installed"
+      }
+    }
+  }
+}
