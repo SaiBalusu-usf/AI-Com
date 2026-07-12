@@ -1,0 +1,41 @@
+# Evidence for "runs correctly as advertised": every push re-verifies the
+# core stack from scratch — unit tests plus the full fixture-scale golden
+# path (data -> baseline -> harness -> tables -> figures). The ML stack is
+# deliberately NOT installed here; torch-dependent tests skip by design and
+# weight-dependent metrics record themselves unavailable (§2 rule 7).
+name: ci
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install core stack
+        run: make setup
+      - name: Unit tests
+        run: make test
+      - name: Fixture determinism
+        run: |
+          md5sum data/fixtures/mini.jsonl > /tmp/fixture.md5
+          make fixture
+          md5sum -c /tmp/fixture.md5
+      - name: Golden path end-to-end
+        run: make repro
+      - name: Upload run artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: repro-outputs
+          path: |
+            results/tables/
+            results/figures/*.png
+          retention-days: 14

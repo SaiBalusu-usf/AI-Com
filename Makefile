@@ -6,7 +6,7 @@ PIP    := $(PYTHON) -m pip
 .PHONY: venv setup setup-full setup-cuda test data download fixture mini \
         baseline train-t5 train-t5-smoke train-qwen train-qwen-smoke \
         tiny-models train-t5-smoke-tiny train-qwen-smoke-tiny \
-        ablations eval tables figures repro clean
+        annotate annotate-score ablations eval tables figures repro clean
 
 venv:
 	python3 -m venv .venv
@@ -81,6 +81,15 @@ ablations:
 # Re-evaluate an existing run directory: make eval RUN=results/runs/<dir>
 eval:
 	$(PYTHON) scripts/run_experiment.py --eval-only --run $(RUN)
+
+# Checker-accuracy protocol: draw a sheet, hand-label it, score agreement.
+#   make annotate RUN=results/runs/<dir> OUT=results/annotation/m2.csv
+#   make annotate-score FILE=results/annotation/m2.csv
+annotate:
+	$(PYTHON) scripts/audit_factcheck.py --sample 100 --run $(RUN) --out $(OUT)
+
+annotate-score:
+	$(PYTHON) scripts/audit_factcheck.py --score $(FILE)
 
 tables:
 	$(PYTHON) scripts/make_tables.py --runs results/runs --out results/tables

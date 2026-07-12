@@ -131,7 +131,10 @@ Every system is scored by the identical pipeline
   correlation is by construction).
 - The fact checker is precision-first: team-milestone claims and some idioms
   are deliberately unchecked (documented in `eval/factcheck.py`), and its
-  invented-player check needs the optional spaCy model.
+  invented-player check needs the optional spaCy model. Its own accuracy on
+  real outputs is measured by hand-labeling a stratified sample
+  (`make annotate RUN=... OUT=...`, fill the sheet, `make annotate-score
+  FILE=...`) — report those numbers alongside any faithfulness claims.
 - Latency comparisons across machines are not meaningful; each run records
   its hardware context.
 - B2/M1/M2 numbers await D1–D3; figures/tables pick them up automatically.
