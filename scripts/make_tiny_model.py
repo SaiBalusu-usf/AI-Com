@@ -76,7 +76,8 @@ def build_causal(tokenizer, out_dir: Path) -> None:
         vocab_size=len(tokenizer),
         hidden_size=64, intermediate_size=256,
         num_hidden_layers=2, num_attention_heads=4, num_key_value_heads=4,
-        max_position_embeddings=512,
+        # room for 8-shot prompts (the B2 smoke path feeds ~600-token prompts)
+        max_position_embeddings=2048,
         pad_token_id=tokenizer.pad_token_id,
         eos_token_id=tokenizer.eos_token_id,
         bos_token_id=tokenizer.eos_token_id,

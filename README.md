@@ -62,16 +62,22 @@ game-state conditioning collapses excitement calibration from ρ=0.55 to
 > results.** Swapping in real data is a one-command change once the human
 > decisions below are made.
 
-## Pending human decisions (PLAN.md)
+## Status of the human decisions (details + history in PLAN.md)
 
-- **D1 dataset:** choose + license-check a parallel commentary corpus
-  (options in `data/DATASET_CARD.md`); then `make download && make data`
-  with `source.kind: cricsheet` in `configs/data.yaml`.
-- **D2 ML stack:** run `make setup-full` on a machine with huggingface access
-  (>2 GB — needed approval under the project's download policy).
-- **D3 training runs:** `make train-t5-smoke` / `make train-qwen-smoke`
-  (phase-4 gate), then full runs via `python scripts/train_model.py --config
-  configs/finetune_*.yaml --yes` (>30 min on CPU, so explicitly approved).
+- **D1 dataset: decided.** Primary corpus = Kaggle IPL-2024 ball-by-ball
+  commentary; secondary = Asia Cup 2022. Loader + alignment audit are wired
+  (`data/kaggle_commentary.py`). Remaining: download with Kaggle credentials
+  and record each page's licence in `data/DATASET_CARD.md`, then `make data`
+  with `source.kind: kaggle_commentary`.
+- **D2 ML stack: installed** (torch/transformers/peft/trl/bert-score, CPU).
+  Pretrained WEIGHTS still need a machine with huggingface access — every
+  weight-dependent metric degrades loudly until then.
+- **D3 training: machinery gate passed.** Both trainer paths (T5 LoRA, TRL
+  SFT), adapter reload, harness evaluation, few-shot hf_local loop, and A1
+  train/eval re-linearization parity are proven end-to-end on from-scratch
+  tiny random models (`make train-t5-smoke-tiny` / `train-qwen-smoke-tiny`;
+  runs named `smoke_*`, excluded from results). Real-weight smoke + full
+  runs: `make train-t5-smoke && make train-qwen-smoke`, then `--yes` runs.
 
 ## Repository map
 

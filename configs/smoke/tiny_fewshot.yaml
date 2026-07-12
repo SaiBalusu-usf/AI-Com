@@ -1,0 +1,12 @@
+# B2 machinery smoke: the ACTUAL hf_local few-shot loop (load -> chat-template
+# prompt with 8 stratified shots -> generate -> harness) on the from-scratch
+# tiny random causal model. Outputs are noise; the run proves the code path
+# that real Qwen weights will flow through.
+extends: ../baseline_fewshot.yaml
+name: smoke_tiny_fewshot_random
+generator:
+  backend: hf_local
+  model_name: data/processed/tiny_random/causal
+  load_in_4bit: false
+  n_shots: 8
+  max_new_tokens: 24

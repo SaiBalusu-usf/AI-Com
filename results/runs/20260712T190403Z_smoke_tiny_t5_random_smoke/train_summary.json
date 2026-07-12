@@ -1,0 +1,11 @@
+{
+  "adapter_dir": "results/runs/20260712T190403Z_smoke_tiny_t5_random_smoke/adapter",
+  "train_loss": 7.245407409667969,
+  "steps": 50,
+  "device_plan": {
+    "available": true,
+    "use_4bit": false,
+    "cuda": false,
+    "note": null
+  }
+}

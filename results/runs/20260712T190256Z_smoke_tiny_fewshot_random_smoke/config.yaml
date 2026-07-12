@@ -1,0 +1,65 @@
+experiment:
+  seed: 13
+  name: smoke_tiny_fewshot_random
+  system: fewshot
+  data:
+    dataset: data/processed/dataset.jsonl
+    split: test
+  generator:
+    backend: hf_local
+    model_name: data/processed/tiny_random/causal
+    load_in_4bit: false
+    n_shots: 8
+    max_new_tokens: 24
+    system_prompt: You are a live cricket commentator. Given a structured description
+      of one delivery, write one or two vivid English sentences of commentary. Mention
+      only facts present in the input. Do not invent players, scores, or events.
+    prompt_template: '{examples}
+
+      Input: {input}
+
+      Commentary:
+
+      '
+    example_selection: fixed_seeded
+  decoding:
+    strategy: sample
+    temperature: 0.7
+    top_p: 0.9
+  eval_config: configs/eval.yaml
+  _config_path: configs/smoke/tiny_fewshot.yaml
+eval:
+  seed: 13
+  factcheck:
+    enabled: true
+    spacy_ner: auto
+    spacy_model: en_core_web_sm
+  excitement:
+    mode: auto
+    model_name: j-hartmann/emotion-english-distilroberta-base
+    model_weight: 0.5
+    heuristic_weight: 0.5
+    high_arousal_labels:
+    - anger
+    - fear
+    - joy
+    - surprise
+  surface:
+    bleu: true
+    rouge_l: true
+    bert_score:
+      mode: auto
+      model_type: roberta-large
+      rescale_with_baseline: true
+  diversity:
+    distinct_n:
+    - 1
+    - 2
+    self_bleu_sample_pairs: 200
+    repetition_ngram: 4
+  latency:
+    warmup_calls: 5
+    batch_size: 1
+  report:
+    write_markdown: true
+  _config_path: configs/eval.yaml

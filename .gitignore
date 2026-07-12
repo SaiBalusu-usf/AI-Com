@@ -21,3 +21,6 @@ results/runs/**/adapter/
 # misc
 .DS_Store
 scratch/
+
+# trainer checkpoints (metadata only survives the weight excludes; still noise)
+results/runs/**/checkpoint-*/

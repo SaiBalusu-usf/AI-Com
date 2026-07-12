@@ -1,0 +1,36 @@
+experiment:
+  seed: 13
+  name: smoke_tiny_t5_random
+  system: finetune_seq2seq
+  data:
+    dataset: data/processed/dataset.jsonl
+    train_split: train
+    val_split: val
+    eval_split: test
+  model:
+    base: data/processed/tiny_random/t5
+    max_src_tokens: 128
+    max_tgt_tokens: 48
+  lora:
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules:
+    - q
+    - v
+  train:
+    learning_rate: 0.0002
+    epochs: 3
+    batch_size: 8
+    gradient_accumulation: 1
+    early_stopping_patience: 2
+    eval_every_steps: 25
+    max_steps: -1
+  decoding:
+    strategy: greedy
+    max_new_tokens: 32
+  eval_config: configs/eval.yaml
+  _config_path: configs/smoke/tiny_t5.yaml
+  linearization:
+    format: context
+    context_balls: 2

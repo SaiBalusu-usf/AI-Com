@@ -1,0 +1,72 @@
+experiment:
+  seed: 13
+  name: smoke_tiny_t5_random
+  system: finetune_seq2seq
+  data:
+    dataset: data/processed/dataset.jsonl
+    train_split: train
+    val_split: val
+    eval_split: test
+  model:
+    base: data/processed/tiny_random/t5
+    max_src_tokens: 128
+    max_tgt_tokens: 48
+    adapter_dir: results/runs/20260712T190403Z_smoke_tiny_t5_random_smoke/adapter
+  lora:
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules:
+    - q
+    - v
+  train:
+    learning_rate: 0.0002
+    epochs: 3
+    batch_size: 8
+    gradient_accumulation: 1
+    early_stopping_patience: 2
+    eval_every_steps: 25
+    max_steps: -1
+  decoding:
+    strategy: greedy
+    max_new_tokens: 32
+  eval_config: configs/eval.yaml
+  _config_path: configs/smoke/tiny_t5.yaml
+  linearization:
+    format: context
+    context_balls: 2
+eval:
+  seed: 13
+  factcheck:
+    enabled: true
+    spacy_ner: auto
+    spacy_model: en_core_web_sm
+  excitement:
+    mode: auto
+    model_name: j-hartmann/emotion-english-distilroberta-base
+    model_weight: 0.5
+    heuristic_weight: 0.5
+    high_arousal_labels:
+    - anger
+    - fear
+    - joy
+    - surprise
+  surface:
+    bleu: true
+    rouge_l: true
+    bert_score:
+      mode: auto
+      model_type: roberta-large
+      rescale_with_baseline: true
+  diversity:
+    distinct_n:
+    - 1
+    - 2
+    self_bleu_sample_pairs: 200
+    repetition_ngram: 4
+  latency:
+    warmup_calls: 5
+    batch_size: 1
+  report:
+    write_markdown: true
+  _config_path: configs/eval.yaml
