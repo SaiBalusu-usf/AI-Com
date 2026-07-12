@@ -45,15 +45,25 @@ baseline:
 	$(PYTHON) scripts/run_experiment.py --config configs/baseline_template.yaml
 	$(PYTHON) scripts/run_experiment.py --config configs/baseline_fewshot.yaml
 
-# Long runs print their plan + time estimate and require --yes to launch (§9.5).
+# Training prints its plan; full runs require --yes (§9.5). Smoke = 50 steps
+# on the fixture (the phase-4 gate; needs make setup-full).
 train-t5:
-	$(PYTHON) scripts/run_experiment.py --config configs/finetune_t5.yaml --plan-only
+	$(PYTHON) scripts/train_model.py --config configs/finetune_t5.yaml --plan-only
+
+train-t5-smoke:
+	$(PYTHON) scripts/train_model.py --config configs/finetune_t5.yaml --smoke
 
 train-qwen:
-	$(PYTHON) scripts/run_experiment.py --config configs/finetune_qwen.yaml --plan-only
+	$(PYTHON) scripts/train_model.py --config configs/finetune_qwen.yaml --plan-only
 
+train-qwen-smoke:
+	$(PYTHON) scripts/train_model.py --config configs/finetune_qwen.yaml --smoke
+
+# Print the plan for every ablation cell (run individual cells explicitly).
 ablations:
-	$(PYTHON) scripts/run_experiment.py --grid configs/ablations --plan-only
+	@for f in configs/ablations/*.yaml; do \
+		$(PYTHON) scripts/run_experiment.py --config $$f --plan-only || true; \
+	done
 
 # Re-evaluate an existing run directory: make eval RUN=results/runs/<dir>
 eval:
