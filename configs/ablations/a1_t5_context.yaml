@@ -1,0 +1,4 @@
+# A1: context linearization (prev-2-ball outcomes prefixed) for M1
+extends: ../finetune_t5.yaml
+name: m1_t5_context
+linearization: {format: context, context_balls: 2, include_game_state: true}

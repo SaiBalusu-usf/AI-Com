@@ -1,0 +1,4 @@
+# A1: context linearization for B2 few-shot
+extends: ../baseline_fewshot.yaml
+name: b2_fewshot_context
+linearization: {format: context, context_balls: 2, include_game_state: true}

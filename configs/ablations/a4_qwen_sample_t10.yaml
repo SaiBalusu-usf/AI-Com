@@ -1,0 +1,4 @@
+# A4: decoding — sampling T=1.0 for M2
+extends: ../finetune_qwen.yaml
+name: m2_qwen_t10
+decoding: {strategy: sample, temperature: 1.0, top_p: 1.0, max_new_tokens: 96}

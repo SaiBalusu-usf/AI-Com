@@ -1,0 +1,4 @@
+# A4: decoding — greedy for B2 (base is T=0.7)
+extends: ../baseline_fewshot.yaml
+name: b2_fewshot_greedy
+decoding: {strategy: greedy}

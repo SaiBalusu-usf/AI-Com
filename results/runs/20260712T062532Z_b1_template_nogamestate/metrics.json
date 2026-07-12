@@ -1,0 +1,124 @@
+{
+  "run": {
+    "name": "b1_template_nogamestate",
+    "system": "template",
+    "config_path": "configs/ablations/a2_template_nogamestate.yaml",
+    "overrides": [],
+    "data": "data/processed/dataset.jsonl",
+    "split": "test",
+    "n_rows": 697,
+    "seed": 13,
+    "timestamp": "20260712T062532Z",
+    "git_commit": "730c79f"
+  },
+  "metrics": {
+    "faithfulness": {
+      "n": 697,
+      "hallucination_rate": 0.0,
+      "omission_rate": 0.0,
+      "faithfulness_score": 1.0,
+      "per_slot": {
+        "attribution": {
+          "claims": 139,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "boundary": {
+          "claims": 153,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "milestone": {
+          "claims": 10,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "runs": {
+          "claims": 418,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "score": {
+          "claims": 151,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "wicket": {
+          "claims": 49,
+          "false_claims": 0,
+          "precision": 1.0
+        }
+      },
+      "violations_by_type": {},
+      "recall": {
+        "wicket_mentioned": 1.0,
+        "boundary_mentioned": 1.0
+      },
+      "ner": {
+        "status": "unavailable",
+        "reason": "spacy model 'en_core_web_sm' not downloadable/installed: [E050] Can't find model 'en_core_web_sm'. It doesn't seem to be a Python package or a valid path to a data directory."
+      },
+      "examples": {
+        "violations": [],
+        "omissions": []
+      },
+      "reference_baseline": {
+        "hallucination_rate": 0.0,
+        "omission_rate": 0.1287
+      }
+    },
+    "excitement": {
+      "reference_validation": {
+        "spearman_rho": 0.6993437929419011,
+        "n": 697,
+        "mode": "heuristic",
+        "fallback_reason": "excitement model half needs transformers, which is not installed: No module named 'transformers'",
+        "per_phase": {
+          "powerplay": 0.5779509802920956,
+          "middle": 0.6319395725029487,
+          "death": 0.8049914787785691
+        },
+        "passed": true
+      },
+      "calibration": {
+        "spearman_rho": 0.04646809321453032,
+        "n": 697,
+        "mode": "heuristic",
+        "fallback_reason": "excitement model half needs transformers, which is not installed: No module named 'transformers'",
+        "per_phase": {
+          "powerplay": null,
+          "middle": 0.07995090187785225,
+          "death": null
+        },
+        "passed": true
+      }
+    },
+    "surface": {
+      "bleu": 5.601752204034898,
+      "rouge_l": 0.3040528985698288,
+      "bert_score": {
+        "status": "unavailable",
+        "reason": "bert-score/torch not installed or not loadable: No module named 'bert_score'"
+      }
+    },
+    "diversity": {
+      "distinct_1": 0.20467812034761396,
+      "distinct_2": 0.4021430862814758,
+      "self_bleu": 0.0797953985906085,
+      "repetition_4gram_rate": 0.03479576399394856,
+      "n_generations": 697
+    },
+    "latency": {
+      "n_timed": 697,
+      "p50_ms": 0.061668999933317536,
+      "p95_ms": 0.11538620001374485,
+      "mean_ms": 0.0723006025830674,
+      "tokens_per_sec": 91579.23478978156,
+      "hardware": {
+        "platform": "Linux-6.18.5-x86_64-with-glibc2.39",
+        "cpu_count": 4,
+        "torch_device": "not_installed"
+      }
+    }
+  }
+}

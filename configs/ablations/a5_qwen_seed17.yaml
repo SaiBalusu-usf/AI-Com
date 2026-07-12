@@ -1,0 +1,4 @@
+# headline 3-seed repeat (seed 13 = base config)
+extends: ../finetune_qwen.yaml
+name: m2_qwen2.5_1.5b
+seed: 17

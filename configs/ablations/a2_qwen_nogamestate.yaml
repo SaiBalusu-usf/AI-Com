@@ -1,0 +1,4 @@
+# A2 (RQ2): game-state features stripped from M2 inputs
+extends: ../finetune_qwen.yaml
+name: m2_qwen_nogamestate
+linearization: {format: flat, include_game_state: false}

@@ -1,0 +1,4 @@
+# A4: decoding — sampling T=1.0 for B2
+extends: ../baseline_fewshot.yaml
+name: b2_fewshot_t10
+decoding: {strategy: sample, temperature: 1.0, top_p: 1.0}

@@ -1,0 +1,4 @@
+# A2 (RQ2): game-state features stripped from M1 inputs
+extends: ../finetune_t5.yaml
+name: m1_t5_nogamestate
+linearization: {format: flat, include_game_state: false}

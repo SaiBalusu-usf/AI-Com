@@ -1,0 +1,4 @@
+# A1: context linearization for M2
+extends: ../finetune_qwen.yaml
+name: m2_qwen_context
+linearization: {format: context, context_balls: 2, include_game_state: true}

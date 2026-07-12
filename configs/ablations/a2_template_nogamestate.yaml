@@ -1,0 +1,4 @@
+# A2 (RQ2): template baseline without tension-conditioned register
+extends: ../baseline_template.yaml
+name: b1_template_nogamestate
+generator: {use_game_state: false}
