@@ -59,10 +59,19 @@ metrics, per §2 and §4):
   `configs/data.yaml`. Remaining human step: download with Kaggle
   credentials and record the licence shown on each dataset page in
   DATASET_CARD.md (pages unfetchable from this environment).
-- **D2 — Torch install (>2 GB):** approve `make setup-full` on the target
-  machine (or run this repo on a machine with normal network access).
-- **D3 — Full training runs** (>30 min on CPU): commands are printed by
-  `make train-*`; approval required per §9 rule 5.
+- **D2 — Torch install (>2 GB): DONE 2026-07-12 (human approved via
+  "proceed").** Full ML stack installed in-session from PyPI (torch
+  2.13+cu130 running CPU-only, transformers/peft/trl/bert-score; ~5 GB).
+  Model WEIGHTS remain egress-blocked (huggingface.co, spaCy release assets
+  — one attempt each, 403, logged): BERTScore/excitement-model/B2/M1/M2
+  pretrained paths still need a machine with huggingface access.
+- **D3 — Training: smoke gate PASSED in-session; full runs pending
+  weights.** Both trainer paths (Seq2SeqTrainer+LoRA, TRL SFTTrainer)
+  executed the 50-step fixture gate on from-scratch tiny random models
+  (`make train-t5-smoke-tiny` / `train-qwen-smoke-tiny`), adapters were
+  saved, reloaded, and evaluated through the identical harness. Real-model
+  runs: `make train-t5-smoke && make train-qwen-smoke`, then full runs with
+  `--yes` on hardware with huggingface access (§9 rule 5).
 
 ## Phase checklist
 
@@ -107,8 +116,10 @@ metrics, per §2 and §4):
 - [x] Excitement scorer validated on references before use; validation
       numbers reported in every run report (fixture: ρ=0.784)
 - [ ] **PARTIAL** — ≥2 baselines + ≥2 fine-tuned through the identical
-      harness: B1 fully evaluated; B2/M1/M2 flow through the same
-      `evaluate()` but cannot execute in this environment (D2/D3, PLAN.md).
+      harness: B1 fully evaluated; the complete fine-tune loop
+      (train → adapter → reload → harness) is proven end-to-end with
+      from-scratch tiny models (smoke_* runs); B2/M1/M2 with REAL weights
+      still need huggingface access (D2 weights note, D3).
 - [ ] **PARTIAL** — ablation grid A1–A4 logged: all 16 cells defined and
       planned in EXPERIMENTS.md; template cells + 3-seed machinery executed;
       model cells pending D2/D3.

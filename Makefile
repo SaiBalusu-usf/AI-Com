@@ -5,6 +5,7 @@ PIP    := $(PYTHON) -m pip
 
 .PHONY: venv setup setup-full setup-cuda test data download fixture mini \
         baseline train-t5 train-t5-smoke train-qwen train-qwen-smoke \
+        tiny-models train-t5-smoke-tiny train-qwen-smoke-tiny \
         ablations eval tables figures repro clean
 
 venv:
@@ -59,6 +60,17 @@ train-qwen:
 
 train-qwen-smoke:
 	$(PYTHON) scripts/train_model.py --config configs/finetune_qwen.yaml --smoke
+
+# Phase-4 machinery smoke WITHOUT huggingface access: from-scratch tiny
+# random models (outputs are noise; runs are named smoke_* on purpose).
+tiny-models:
+	$(PYTHON) scripts/make_tiny_model.py --out data/processed/tiny_random
+
+train-t5-smoke-tiny: tiny-models
+	$(PYTHON) scripts/train_model.py --config configs/smoke/tiny_t5.yaml --smoke
+
+train-qwen-smoke-tiny: tiny-models
+	$(PYTHON) scripts/train_model.py --config configs/smoke/tiny_causal.yaml --smoke
 
 # Print the plan for every ablation cell (run individual cells explicitly).
 ablations:

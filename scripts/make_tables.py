@@ -145,6 +145,8 @@ def main() -> None:
     parser.add_argument("--runs", default="results/runs")
     parser.add_argument("--out", default="results/tables")
     parser.add_argument("--include-mini", action="store_true")
+    parser.add_argument("--include-smoke", action="store_true",
+                        help="include smoke_* machinery-validation runs")
     args = parser.parse_args()
 
     runs = load_all_runs(args.runs)
@@ -153,6 +155,10 @@ def main() -> None:
     rows = [extract(r) for r in runs]
     if not args.include_mini:
         rows = [r for r in rows if not r["name"].endswith("_mini")]
+    if not args.include_smoke:
+        # smoke_* runs exercise machinery on random-init models; their
+        # numbers are meaningless as results
+        rows = [r for r in rows if not r["name"].startswith("smoke_")]
     grouped = group_rows(rows)
     write_tables(grouped, Path(args.out))
     print(f"wrote {args.out}/main_results.md and .tex ({len(grouped)} systems, "

@@ -1,0 +1,11 @@
+{
+  "adapter_dir": "results/runs/20260712T171432Z_smoke_tiny_causal_random_smoke/adapter",
+  "train_loss": 6.687461853027344,
+  "steps": 50,
+  "device_plan": {
+    "available": true,
+    "use_4bit": false,
+    "cuda": false,
+    "note": null
+  }
+}

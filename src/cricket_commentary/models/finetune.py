@@ -187,6 +187,10 @@ def _train_causal(cfg, rows_train, rows_val, out_dir, max_steps, plan) -> dict:
 
     args = SFTConfig(
         output_dir=str(out_dir),
+        # precision follows the device plan: TRL defaults to bf16, which the
+        # CPU-only transformers check rejects outright
+        bf16=bool(plan.get("cuda")),
+        fp16=False,
         max_length=int(model_cfg["max_seq_tokens"]),
         learning_rate=float(train_cfg["learning_rate"]),
         num_train_epochs=float(train_cfg["epochs"]),
@@ -277,6 +281,7 @@ class FinetunedGenerator:
         if self.is_seq2seq:
             src, _ = format_seq2seq(row)
             inputs = self.tokenizer(src, return_tensors="pt")
+            inputs.pop("token_type_ids", None)  # not a generate() input
             with torch.no_grad():
                 out = self.model.generate(**inputs, **kwargs)
             return self.tokenizer.decode(out[0], skip_special_tokens=True).strip()

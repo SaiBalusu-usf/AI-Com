@@ -1,0 +1,124 @@
+{
+  "run": {
+    "name": "b1_template_mini",
+    "system": "template",
+    "config_path": "configs/baseline_template.yaml",
+    "overrides": [],
+    "data": "data/fixtures/mini.jsonl",
+    "split": "all",
+    "n_rows": 200,
+    "seed": 13,
+    "timestamp": "20260712T171248Z",
+    "git_commit": "c6351ec"
+  },
+  "metrics": {
+    "faithfulness": {
+      "n": 200,
+      "hallucination_rate": 0.0,
+      "omission_rate": 0.0,
+      "faithfulness_score": 1.0,
+      "per_slot": {
+        "attribution": {
+          "claims": 41,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "boundary": {
+          "claims": 53,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "milestone": {
+          "claims": 2,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "runs": {
+          "claims": 87,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "score": {
+          "claims": 38,
+          "false_claims": 0,
+          "precision": 1.0
+        },
+        "wicket": {
+          "claims": 26,
+          "false_claims": 0,
+          "precision": 1.0
+        }
+      },
+      "violations_by_type": {},
+      "recall": {
+        "wicket_mentioned": 1.0,
+        "boundary_mentioned": 1.0
+      },
+      "ner": {
+        "status": "unavailable",
+        "reason": "spacy model 'en_core_web_sm' not downloadable/installed: [E050] Can't find model 'en_core_web_sm'. It doesn't seem to be a Python package or a valid path to a data directory."
+      },
+      "examples": {
+        "violations": [],
+        "omissions": []
+      },
+      "reference_baseline": {
+        "hallucination_rate": 0.0,
+        "omission_rate": 0.2025
+      }
+    },
+    "excitement": {
+      "reference_validation": {
+        "spearman_rho": 0.8063743775129548,
+        "n": 200,
+        "mode": "heuristic",
+        "fallback_reason": "could not load excitement model 'j-hartmann/emotion-english-distilroberta-base': We couldn't connect to 'https://huggingface.co' to load the files, and couldn't find them in the cached files.\nCheck your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.",
+        "per_phase": {
+          "powerplay": 0.6733447444797671,
+          "middle": 0.8035068017719897,
+          "death": 0.8560516955976089
+        },
+        "passed": true
+      },
+      "calibration": {
+        "spearman_rho": 0.6853402930713176,
+        "n": 200,
+        "mode": "heuristic",
+        "fallback_reason": "could not load excitement model 'j-hartmann/emotion-english-distilroberta-base': We couldn't connect to 'https://huggingface.co' to load the files, and couldn't find them in the cached files.\nCheck your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.",
+        "per_phase": {
+          "powerplay": 0.4614976368810153,
+          "middle": 0.721234059195347,
+          "death": 0.7938772010280456
+        },
+        "passed": true
+      }
+    },
+    "surface": {
+      "bleu": 6.024817981736972,
+      "rouge_l": 0.30630968655603463,
+      "bert_score": {
+        "status": "unavailable",
+        "reason": "bert-score could not run (roberta-large weights or torch backend missing): We couldn't connect to 'https://huggingface.co' to load the files, and couldn't find them in the cached files.\nCheck your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'."
+      }
+    },
+    "diversity": {
+      "distinct_1": 0.579202014962049,
+      "distinct_2": 0.7912146872727831,
+      "self_bleu": 0.0806022624464424,
+      "repetition_4gram_rate": 0.038461538461538464,
+      "n_generations": 200
+    },
+    "latency": {
+      "n_timed": 200,
+      "p50_ms": 0.056825999990905984,
+      "p95_ms": 0.09047354996027933,
+      "mean_ms": 0.061092110000515724,
+      "tokens_per_sec": 111307.33575812973,
+      "hardware": {
+        "platform": "Linux-6.18.5-x86_64-with-glibc2.39",
+        "cpu_count": 4,
+        "torch_device": "cpu"
+      }
+    }
+  }
+}

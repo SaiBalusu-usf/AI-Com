@@ -1,0 +1,16 @@
+# Phase-4 smoke gate cell: REAL Seq2SeqTrainer/LoRA/adapter machinery on a
+# from-scratch tiny random T5 (scripts/make_tiny_model.py). Machinery
+# validation only — outputs are noise by construction.
+extends: ../finetune_t5.yaml
+name: smoke_tiny_t5_random
+model:
+  base: data/processed/tiny_random/t5
+  max_src_tokens: 128
+  max_tgt_tokens: 48
+train:
+  batch_size: 8
+  gradient_accumulation: 1
+  eval_every_steps: 25
+decoding:
+  strategy: greedy
+  max_new_tokens: 32

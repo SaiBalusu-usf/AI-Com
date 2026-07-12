@@ -248,12 +248,16 @@ def main() -> None:
     parser.add_argument("--runs", default="results/runs")
     parser.add_argument("--out", default="results/figures")
     parser.add_argument("--include-mini", action="store_true")
+    parser.add_argument("--include-smoke", action="store_true",
+                        help="include smoke_* machinery-validation runs")
     args = parser.parse_args()
 
     _style()
     runs = load_all_runs(args.runs)
     if not args.include_mini:
         runs = [r for r in runs if not r["run"].get("name", "").endswith("_mini")]
+    if not args.include_smoke:
+        runs = [r for r in runs if not r["run"].get("name", "").startswith("smoke_")]
     if not runs:
         raise SystemExit(f"no runs under {args.runs}")
     out_dir = Path(args.out)

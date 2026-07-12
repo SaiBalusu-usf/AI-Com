@@ -1,0 +1,16 @@
+# Phase-4 smoke gate cell for the TRL SFT path: from-scratch tiny random
+# Llama with a simple chat template. Machinery validation only.
+extends: ../finetune_qwen.yaml
+name: smoke_tiny_causal_random
+model:
+  base: data/processed/tiny_random/causal
+  quantize_4bit: false
+  max_seq_tokens: 256
+  system_prompt: "You are a live cricket commentator. Describe this ball."
+train:
+  batch_size: 8
+  gradient_accumulation: 1
+  eval_every_steps: 25
+decoding:
+  strategy: greedy
+  max_new_tokens: 32

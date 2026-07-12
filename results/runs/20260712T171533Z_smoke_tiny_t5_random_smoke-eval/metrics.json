@@ -1,0 +1,156 @@
+{
+  "run": {
+    "name": "smoke_tiny_t5_random_smoke-eval",
+    "system": "finetune_seq2seq",
+    "config_path": "configs/smoke/tiny_t5.yaml",
+    "overrides": [
+      "model.adapter_dir=results/runs/20260712T171338Z_smoke_tiny_t5_random_smoke/adapter"
+    ],
+    "data": "data/fixtures/mini.jsonl",
+    "split": "all",
+    "n_rows": 200,
+    "seed": 13,
+    "timestamp": "20260712T171533Z",
+    "git_commit": "c6351ec"
+  },
+  "metrics": {
+    "faithfulness": {
+      "n": 200,
+      "hallucination_rate": 0.0,
+      "omission_rate": 1.0,
+      "faithfulness_score": 1.0,
+      "per_slot": {},
+      "violations_by_type": {},
+      "recall": {
+        "wicket_mentioned": 0.0,
+        "boundary_mentioned": 0.0
+      },
+      "ner": {
+        "status": "unavailable",
+        "reason": "spacy model 'en_core_web_sm' not downloadable/installed: [E050] Can't find model 'en_core_web_sm'. It doesn't seem to be a Python package or a valid path to a data directory."
+      },
+      "examples": {
+        "violations": [],
+        "omissions": [
+          {
+            "text": "wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate wate",
+            "omissions": [
+              "four unmentioned"
+            ]
+          },
+          {
+            "text": "Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings",
+            "omissions": [
+              "wicket unmentioned"
+            ]
+          },
+          {
+            "text": "Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings",
+            "omissions": [
+              "four unmentioned"
+            ]
+          },
+          {
+            "text": "Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings",
+            "omissions": [
+              "wicket unmentioned"
+            ]
+          },
+          {
+            "text": "Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings",
+            "omissions": [
+              "wicket unmentioned"
+            ]
+          },
+          {
+            "text": "! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! !",
+            "omissions": [
+              "four unmentioned"
+            ]
+          },
+          {
+            "text": "109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109 109",
+            "omissions": [
+              "six unmentioned"
+            ]
+          },
+          {
+            "text": "Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings",
+            "omissions": [
+              "six unmentioned"
+            ]
+          },
+          {
+            "text": "Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings Jennings",
+            "omissions": [
+              "six unmentioned"
+            ]
+          },
+          {
+            "text": "gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap gap",
+            "omissions": [
+              "four unmentioned"
+            ]
+          }
+        ]
+      },
+      "reference_baseline": {
+        "hallucination_rate": 0.0,
+        "omission_rate": 0.2025
+      }
+    },
+    "excitement": {
+      "reference_validation": {
+        "spearman_rho": 0.8063743775129548,
+        "n": 200,
+        "mode": "heuristic",
+        "fallback_reason": "could not load excitement model 'j-hartmann/emotion-english-distilroberta-base': We couldn't connect to 'https://huggingface.co' to load the files, and couldn't find them in the cached files.\nCheck your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.",
+        "per_phase": {
+          "powerplay": 0.6733447444797671,
+          "middle": 0.8035068017719897,
+          "death": 0.8560516955976089
+        },
+        "passed": true
+      },
+      "calibration": {
+        "spearman_rho": 0.04715348901737229,
+        "n": 200,
+        "mode": "heuristic",
+        "fallback_reason": "could not load excitement model 'j-hartmann/emotion-english-distilroberta-base': We couldn't connect to 'https://huggingface.co' to load the files, and couldn't find them in the cached files.\nCheck your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.",
+        "per_phase": {
+          "powerplay": null,
+          "middle": -0.029058542325288178,
+          "death": 0.15468997660495637
+        },
+        "passed": true
+      }
+    },
+    "surface": {
+      "bleu": 0.008672808972818283,
+      "rouge_l": 0.0009128061481002658,
+      "bert_score": {
+        "status": "unavailable",
+        "reason": "bert-score could not run (roberta-large weights or torch backend missing): We couldn't connect to 'https://huggingface.co' to load the files, and couldn't find them in the cached files.\nCheck your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'."
+      }
+    },
+    "diversity": {
+      "distinct_1": 0.006287099754712952,
+      "distinct_2": 0.006489909424219821,
+      "self_bleu": 0.43000000000000016,
+      "repetition_4gram_rate": 0.5691489361702128,
+      "n_generations": 200
+    },
+    "latency": {
+      "n_timed": 200,
+      "p50_ms": 80.6435315000158,
+      "p95_ms": 90.82656390000352,
+      "mean_ms": 81.71186451999745,
+      "tokens_per_sec": 391.6199953088648,
+      "hardware": {
+        "platform": "Linux-6.18.5-x86_64-with-glibc2.39",
+        "cpu_count": 4,
+        "torch_device": "cpu"
+      }
+    }
+  }
+}
