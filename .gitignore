@@ -24,3 +24,10 @@ scratch/
 
 # trainer checkpoints (metadata only survives the weight excludes; still noise)
 results/runs/**/checkpoint-*/
+
+# paper build artifacts (regenerate with make -C paper assets)
+paper/assets/
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/main.pdf

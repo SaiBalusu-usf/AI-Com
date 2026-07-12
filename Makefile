@@ -6,7 +6,7 @@ PIP    := $(PYTHON) -m pip
 .PHONY: venv setup setup-full setup-cuda test data download fixture mini \
         baseline train-t5 train-t5-smoke train-qwen train-qwen-smoke \
         tiny-models train-t5-smoke-tiny train-qwen-smoke-tiny \
-        annotate annotate-score ablations eval tables figures repro clean
+        annotate annotate-score examples ablations eval tables figures repro clean
 
 venv:
 	python3 -m venv .venv
@@ -104,3 +104,7 @@ repro: test fixture mini tables figures
 clean:
 	rm -rf data/processed/* .pytest_cache
 	find . -name __pycache__ -type d -exec rm -rf {} +
+
+# Qualitative side-by-side table for the paper (inputs, outputs, checker verdicts).
+examples:
+	$(PYTHON) scripts/make_examples.py --runs results/runs --out results/tables

@@ -1,0 +1,88 @@
+% ACL-shaped scaffold — THE HUMAN WRITES THE PROSE (project brief §1).
+% This skeleton exists so every table/figure enters the paper from the
+% generated artifacts, never by hand: run `make -C paper assets` after
+% `make tables figures examples` to refresh assets/, then compile.
+%
+% For submission, replace the article preamble with the official ACL style
+% (acl.sty from the current ACL template release) — section structure below
+% is already in the expected shape.
+\documentclass[11pt,twocolumn]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[hidelinks]{hyperref}
+
+\title{Faithful, Game-State-Aware Cricket Commentary Generation:\\
+       A Data-to-Text Study}
+\author{TODO: author \\ CAP 6640}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+TODO (150 words): data-to-text over ball-by-ball cricket records; slot-level
+fact checking as the primary metric; template vs.\ few-shot vs.\ fine-tuned
+comparison (RQ1); game-state conditioning and excitement calibration (RQ2);
+small-model efficiency at real-time latency (RQ3).
+\end{abstract}
+
+\section{Introduction}
+% TODO: EA-style repetition vs. LLM hallucination framing; the three RQs.
+
+\section{Related Work}
+% TODO: data-to-text (RotoWire etc.), faithfulness evaluation, sports
+% commentary generation.
+
+\section{Data}
+% TODO from data/DATASET_CARD.md: corpus, licences (fill-at-download table),
+% cleaning stats, split-by-match protocol, linearization formats.
+
+\section{Method: A Slot-Level Fact Checker}
+% TODO from EXPERIMENTS.md entries factcheck-v1-review + d3-smoke-gate:
+% claim slots, precision-first design, the v1->v2 adversarial-review cycle,
+% checker-accuracy annotation protocol (make annotate), and the
+% three-regimes demonstration (faithful / silent-noise / parroting-noise).
+
+\section{Systems}
+% TODO from MODEL_CARDS.md: B1 template, B2 few-shot, M1 flan-t5 LoRA,
+% M2 Qwen QLoRA; decoding grid.
+
+\section{Experiments}
+
+\input{assets/main_results}
+
+\input{assets/qualitative_examples}
+
+\begin{figure}[t]\centering
+  \includegraphics[width=\columnwidth]{assets/excitement_calibration}
+  \caption{Excitement calibration (RQ2): TODO caption from run numbers.}
+  \label{fig:calibration}
+\end{figure}
+
+\begin{figure}[t]\centering
+  \includegraphics[width=\columnwidth]{assets/faithfulness_vs_diversity}
+  \caption{Faithfulness--diversity tradeoff across decoding settings (A4).}
+  \label{fig:tradeoff}
+\end{figure}
+
+\begin{figure}[t]\centering
+  \includegraphics[width=\columnwidth]{assets/hallucination_by_slot}
+  \caption{Hallucinations per 100 generations by slot type.}
+  \label{fig:slots}
+\end{figure}
+
+\begin{figure}[t]\centering
+  \includegraphics[width=\columnwidth]{assets/latency_vs_faithfulness}
+  \caption{Latency vs.\ faithfulness (RQ3); bubble area $\propto$ parameters.}
+  \label{fig:latency}
+\end{figure}
+
+% TODO: RQ1/RQ2/RQ3 findings; ablations A1--A4; 3-seed mean±std protocol.
+
+\section{Limitations}
+% TODO from README Limitations + DATASET_CARD Known limitations: checker
+% recall gaps, synthetic-vs-real caveats, single-machine latency.
+
+\end{document}
