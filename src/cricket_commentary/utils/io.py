@@ -9,15 +9,24 @@ from typing import Iterable
 
 def read_jsonl(path: str | Path) -> list[dict]:
     rows = []
-    with open(path, encoding="utf-8") as f:
-        for line_no, line in enumerate(f, 1):
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                rows.append(json.loads(line))
-            except json.JSONDecodeError as err:
-                raise ValueError(f"{path}:{line_no}: invalid JSON ({err})") from err
+    try:
+        with open(path, encoding="utf-8") as f:
+            for line_no, line in enumerate(f, 1):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    rows.append(json.loads(line))
+                except json.JSONDecodeError as err:
+                    raise ValueError(f"{path}:{line_no}: invalid JSON ({err})") from err
+    except UnicodeDecodeError as err:
+        raise ValueError(
+            f"{path} is not UTF-8 ({err}). It was probably written by a "
+            "pre-UTF-8-pin run using the OS locale codec (Windows cp1252). "
+            "Restore or regenerate it: `git restore <file>` for committed "
+            "files, `make fixture`/`make data` for generated ones, or delete "
+            "the stale run directory."
+        ) from err
     return rows
 
 
