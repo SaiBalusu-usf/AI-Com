@@ -36,7 +36,7 @@ def load_cricsheet_matches(raw_dir: Path, max_matches: int) -> dict[str, dict]:
     for path in paths:
         if len(matches) >= max_matches:
             break
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             match = json.load(f)
         match_type = (match.get("info") or {}).get("match_type", "")
         if match_type not in ("T20", "IT20"):
@@ -109,7 +109,7 @@ def main() -> None:
         out = Path(cfg["paths"]["processed"])
         n = write_jsonl(out, rows)
         stats_path = out.with_suffix(".stats.json")
-        stats_path.write_text(json.dumps(summary, indent=2))
+        stats_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
         log.info("wrote %d rows -> %s (stats: %s)", n, out, stats_path)
         log.info("summary: %s", json.dumps(summary))
 

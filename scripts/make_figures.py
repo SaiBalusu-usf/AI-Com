@@ -102,7 +102,9 @@ def _faith(run):
 
 def _run_config(run) -> dict:
     cfg_path = Path(run["run_dir"]) / "config.yaml"
-    return yaml.safe_load(cfg_path.read_text()).get("experiment", {}) if cfg_path.exists() else {}
+    if not cfg_path.exists():
+        return {}
+    return yaml.safe_load(cfg_path.read_text(encoding="utf-8")).get("experiment", {})
 
 
 def fig_faithfulness_vs_diversity(runs, out_dir):

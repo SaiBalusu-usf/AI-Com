@@ -160,7 +160,7 @@ def main() -> None:
     run_dir = Path("results/runs") / f"{stamp}_{cfg['name']}{tag}"
     run_dir.mkdir(parents=True, exist_ok=False)
     add_run_file_handler(run_dir)
-    with open(run_dir / "config.yaml", "w") as f:
+    with open(run_dir / "config.yaml", "w", encoding="utf-8") as f:
         yaml.safe_dump({"experiment": cfg, "eval": eval_cfg}, f, sort_keys=False)
 
     log.info("generating %d commentaries ...", len(rows))
@@ -197,11 +197,11 @@ def eval_only(args) -> None:
     if not args.run:
         raise SystemExit("--eval-only requires --run <run_dir>")
     run_dir = Path(args.run)
-    stored = yaml.safe_load((run_dir / "config.yaml").read_text())
+    stored = yaml.safe_load((run_dir / "config.yaml").read_text(encoding="utf-8"))
     cfg, eval_cfg = stored["experiment"], stored["eval"]
     set_seed(int(cfg["seed"]))
 
-    old = json.loads((run_dir / "metrics.json").read_text())
+    old = json.loads((run_dir / "metrics.json").read_text(encoding="utf-8"))
     stored_meta = old["run"]
     # the run's recorded provenance, not the config defaults — the run may
     # have been launched with --data/--split overrides (e.g. the fixture)

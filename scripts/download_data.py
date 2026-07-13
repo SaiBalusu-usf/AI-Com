@@ -69,7 +69,7 @@ def main() -> None:
         "files": len(names),
         "license": "ODC-BY (confirm on cricsheet.org/register/ and record in DATASET_CARD.md)",
     }
-    (raw_dir / "PROVENANCE.json").write_text(json.dumps(provenance, indent=2))
+    (raw_dir / "PROVENANCE.json").write_text(json.dumps(provenance, indent=2), encoding="utf-8")
     log.info("extracted %d match files -> %s; provenance recorded", len(names), raw_dir)
 
 

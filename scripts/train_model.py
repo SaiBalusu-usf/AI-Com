@@ -86,7 +86,7 @@ def main() -> None:
     run_dir = Path("results/runs") / f"{stamp}_{cfg['name']}_{'smoke' if args.smoke else 'train'}"
     run_dir.mkdir(parents=True, exist_ok=False)
     add_run_file_handler(run_dir)
-    with open(run_dir / "config.yaml", "w") as f:
+    with open(run_dir / "config.yaml", "w", encoding="utf-8") as f:
         yaml.safe_dump({"experiment": cfg}, f, sort_keys=False)
 
     try:
@@ -98,7 +98,7 @@ def main() -> None:
         log.error("training unavailable: %s", err)
         sys.exit(4)
 
-    (run_dir / "train_summary.json").write_text(json.dumps(summary, indent=2))
+    (run_dir / "train_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(f"DONE {run_dir}\n  adapter: {summary['adapter_dir']}\n"
           f"  train_loss={summary['train_loss']:.4f} steps={summary['steps']}\n"
           f"  evaluate with: python scripts/run_experiment.py --config {args.config} "

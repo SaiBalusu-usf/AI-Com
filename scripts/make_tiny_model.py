@@ -100,7 +100,7 @@ def main() -> None:
 
     torch.manual_seed(args.seed)
 
-    rows = [json.loads(line) for line in open(args.fixture)]
+    rows = [json.loads(line) for line in open(args.fixture, encoding="utf-8")]
     texts = [r["linearized_input"] for r in rows] + [r["target_commentary"] for r in rows]
     tokenizer = build_tokenizer(texts)
 

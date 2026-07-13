@@ -155,8 +155,8 @@ def main() -> None:
             "the fact checker flagged (details in the generated markdown twin).}",
             "\\label{tab:examples}", "\\end{table*}"]
 
-    (out_dir / "qualitative_examples.md").write_text("\n".join(md) + "\n")
-    (out_dir / "qualitative_examples.tex").write_text("\n".join(tex) + "\n")
+    (out_dir / "qualitative_examples.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+    (out_dir / "qualitative_examples.tex").write_text("\n".join(tex) + "\n", encoding="utf-8")
     print(f"wrote {out_dir}/qualitative_examples.md and .tex "
           f"({len(chosen)} balls x {len(names)} systems)")
 

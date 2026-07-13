@@ -113,7 +113,8 @@ def write_tables(grouped: list[dict], out_dir: Path) -> None:
         "# Main results\n\nAggregated from results/runs by scripts/make_tables.py — "
         "'—' means the metric was recorded unavailable/blocked for that run, "
         "never imputed. 'seeds' counts aggregated runs; a '*' marks a value "
-        "reported by only a subset of the group's runs.\n\n" + "\n".join(md) + "\n"
+        "reported by only a subset of the group's runs.\n\n" + "\n".join(md) + "\n",
+        encoding="utf-8",
     )
 
     tex = [
@@ -137,7 +138,7 @@ def write_tables(grouped: list[dict], out_dir: Path) -> None:
         "\\label{tab:main}",
         "\\end{table*}",
     ]
-    (out_dir / "main_results.tex").write_text("\n".join(tex) + "\n")
+    (out_dir / "main_results.tex").write_text("\n".join(tex) + "\n", encoding="utf-8")
 
 
 def main() -> None:

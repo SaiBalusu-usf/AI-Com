@@ -9,7 +9,7 @@ from typing import Iterable
 
 def read_jsonl(path: str | Path) -> list[dict]:
     rows = []
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         for line_no, line in enumerate(f, 1):
             line = line.strip()
             if not line:
@@ -28,7 +28,8 @@ def write_jsonl(path: str | Path, rows: Iterable[dict]) -> int:
     # newline="\n" keeps output byte-identical across platforms — Windows'
     # default CRLF translation would break the committed fixture's
     # regeneration-determinism guarantee
-    with open(path, "w", newline="\n") as f:
+    # explicit utf-8: Windows' cp1252 default cannot encode real commentary
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
         for row in rows:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
             n += 1

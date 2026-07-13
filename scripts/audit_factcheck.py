@@ -61,7 +61,7 @@ def _checker_verdicts(rows: list[dict], gens: list[dict]) -> list[dict]:
 
 def sample(args) -> None:
     run_dir = Path(args.run)
-    meta = json.loads((run_dir / "metrics.json").read_text())["run"]
+    meta = json.loads((run_dir / "metrics.json").read_text(encoding="utf-8"))["run"]
     rows = read_jsonl(meta["data"])
     if meta.get("split", "all") != "all":
         rows = [r for r in rows if r["split"] == meta["split"]]
@@ -93,7 +93,7 @@ def sample(args) -> None:
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     fields = list(verdicts[0].keys()) + ["stratum", "human_hallucination", "human_omission", "human_notes"]
-    with open(out, "w", newline="") as f:
+    with open(out, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
         writer.writeheader()
         for i in chosen:
@@ -128,7 +128,7 @@ def _binary_scores(pred: list[bool], gold: list[bool]) -> dict:
 
 def score(args) -> None:
     path = Path(args.score)
-    with open(path, newline="") as f:
+    with open(path, newline="", encoding="utf-8") as f:
         sheet = list(csv.DictReader(f))
     unlabelled = [r for r in sheet if r["human_hallucination"].strip().lower() not in ("y", "n")
                   or r["human_omission"].strip().lower() not in ("y", "n")]
@@ -150,7 +150,7 @@ def score(args) -> None:
         results[task]["by_stratum"] = by_stratum
 
     out = path.with_suffix(".scores.json")
-    out.write_text(json.dumps(results, indent=2))
+    out.write_text(json.dumps(results, indent=2), encoding="utf-8")
     for task, r in results.items():
         print(f"{task}: precision={r['precision']} recall={r['recall']} "
               f"f1={r['f1']} kappa={r['kappa']} (n={r['n']})")

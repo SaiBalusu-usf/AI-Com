@@ -33,7 +33,7 @@ def load_config(path: str | Path) -> dict:
     path = Path(path)
     if not path.exists():
         raise ConfigError(f"config not found: {path}")
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         cfg = yaml.safe_load(f) or {}
     if not isinstance(cfg, dict):
         raise ConfigError(f"config root must be a mapping: {path}")

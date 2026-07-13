@@ -83,7 +83,7 @@ def write_run_report(run_dir: str | Path, run_meta: dict, metrics: dict) -> Path
     run_dir = Path(run_dir)
     run_dir.mkdir(parents=True, exist_ok=True)
 
-    with open(run_dir / "metrics.json", "w") as f:
+    with open(run_dir / "metrics.json", "w", encoding="utf-8") as f:
         json.dump({"run": run_meta, "metrics": metrics}, f, indent=2, ensure_ascii=False)
         f.write("\n")
 
@@ -107,7 +107,7 @@ def write_run_report(run_dir: str | Path, run_meta: dict, metrics: dict) -> Path
     lines.append("")
 
     report_path = run_dir / "report.md"
-    report_path.write_text("\n".join(lines))
+    report_path.write_text("\n".join(lines), encoding="utf-8")
     return report_path
 
 
@@ -141,7 +141,7 @@ def load_all_runs(runs_root: str | Path) -> list[dict]:
         metrics_path = run_dir / "metrics.json"
         if not metrics_path.exists():
             continue
-        with open(metrics_path) as f:
+        with open(metrics_path, encoding="utf-8") as f:
             payload = json.load(f)
         runs.append(
             {
