@@ -25,7 +25,10 @@ def write_jsonl(path: str | Path, rows: Iterable[dict]) -> int:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     n = 0
-    with open(path, "w") as f:
+    # newline="\n" keeps output byte-identical across platforms — Windows'
+    # default CRLF translation would break the committed fixture's
+    # regeneration-determinism guarantee
+    with open(path, "w", newline="\n") as f:
         for row in rows:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
             n += 1

@@ -1,6 +1,14 @@
 # Golden-path entry points. `make mini` is the grader's one-command check.
-# If .venv exists it is used automatically; otherwise the system python3.
+# POSIX: an existing .venv is used automatically, else system python3.
+# Windows (PowerShell/cmd + GNU Make): activate the venv first, then `python`
+# resolves inside it. Core targets (setup/test/fixture/mini/tables/figures/
+# repro/train-*) are Windows-safe; `ablations` and `clean` use a POSIX shell —
+# run those from Git Bash or WSL.
+ifeq ($(OS),Windows_NT)
+PYTHON ?= python
+else
 PYTHON ?= $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python3)
+endif
 PIP    := $(PYTHON) -m pip
 
 .PHONY: venv setup setup-full setup-cuda test data download fixture mini \

@@ -1,0 +1,6 @@
+# The committed fixture must stay byte-identical across platforms — never
+# line-ending-converted on checkout (its md5 is a determinism check in CI).
+*.jsonl text eol=lf
+*.py text eol=lf
+*.yaml text eol=lf
+Makefile text eol=lf
