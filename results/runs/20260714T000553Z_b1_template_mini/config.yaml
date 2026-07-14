@@ -1,0 +1,47 @@
+experiment:
+  seed: 13
+  name: b1_template
+  system: template
+  data:
+    dataset: data/processed/dataset.jsonl
+    split: test
+  generator:
+    use_game_state: true
+    excitement_gate: 0.45
+  eval_config: configs/eval.yaml
+  _config_path: configs/baseline_template.yaml
+eval:
+  seed: 13
+  factcheck:
+    enabled: true
+    spacy_ner: auto
+    spacy_model: en_core_web_sm
+  excitement:
+    mode: auto
+    model_name: j-hartmann/emotion-english-distilroberta-base
+    model_weight: 0.5
+    heuristic_weight: 0.5
+    high_arousal_labels:
+    - anger
+    - fear
+    - joy
+    - surprise
+  surface:
+    bleu: true
+    rouge_l: true
+    bert_score:
+      mode: auto
+      model_type: roberta-large
+      rescale_with_baseline: true
+  diversity:
+    distinct_n:
+    - 1
+    - 2
+    self_bleu_sample_pairs: 200
+    repetition_ngram: 4
+  latency:
+    warmup_calls: 5
+    batch_size: 1
+  report:
+    write_markdown: true
+  _config_path: configs/eval.yaml

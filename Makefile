@@ -106,8 +106,11 @@ figures:
 	$(PYTHON) scripts/make_figures.py --runs results/runs --out results/figures
 
 # Fresh-clone reproducibility check at fixture scale (Definition of Done #1).
-repro: test fixture mini tables figures
-	@echo "repro OK: fixture pipeline, tables and figures rebuilt from scratch"
+# `data` is included so figures that re-read the processed dataset (the
+# calibration scatter) have their points on a fresh clone — it is fully
+# deterministic, so committed runs stay aligned with the rebuilt file.
+repro: test data fixture mini tables figures
+	@echo "repro OK: dataset, fixture pipeline, tables and figures rebuilt from scratch"
 
 clean:
 	rm -rf data/processed/* .pytest_cache
