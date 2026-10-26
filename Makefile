@@ -21,11 +21,12 @@ venv:
 	.venv/bin/pip install -U pip
 
 setup:
-	$(PIP) install -r requirements.txt
+	$(PIP) install --require-hashes -r requirements-core.lock
 	$(PIP) install -e .
 
-setup-full: setup
-	$(PIP) install -r requirements-ml.txt
+setup-full:
+	$(PIP) install --require-hashes -r requirements-full.lock
+	$(PIP) install -e . --no-deps
 
 setup-cuda: setup-full
 	$(PIP) install -r requirements-cuda.txt
